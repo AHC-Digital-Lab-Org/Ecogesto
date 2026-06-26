@@ -1,0 +1,16 @@
+name: 🚀 CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  call-ops-workflow:
+    # Sustituye 'tu-usuario' por el nombre de tu cuenta o asociación en GitHub
+    uses: AHC-Digital-Lab-Org/asociacion-ops/.github/workflows/netlify-reusable.yml@main
+    with:
+      language: 'node'
+      node_version: '24'
+    secrets: inherit # Pasa los tokens de Netlify automáticamente
