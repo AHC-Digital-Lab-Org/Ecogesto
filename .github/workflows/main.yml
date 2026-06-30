@@ -1,5 +1,15 @@
 name: 🚀 CI/CD Pipeline
 
+# Réplica del pipeline central de la asociación (asociacion-ops/netlify-reusable.yml),
+# pero con un ajuste para MONOREPOS: añade `--filter @ecogestos/frontend` al deploy.
+#
+# Motivo: este repo usa npm workspaces (apps/frontend, apps/backend, packages/shared).
+# `netlify-cli deploy` sin `--filter` detecta 3 proyectos y falla con
+# "We've detected multiple projects inside your repository". El workflow reutilizable
+# no permite pasar ese flag por inputs, así que aquí se inlinean los mismos pasos
+# (install -> test -> build) y se despliega indicando que el sitio es el frontend.
+# (Cuando asociacion-ops soporte monorepos, se puede volver a `uses:` la reusable.)
+
 on:
   push:
     branches: [main]
@@ -7,11 +17,36 @@ on:
     branches: [main]
 
 jobs:
-  call-ops-workflow:
-    # Invoca el workflow reutilizable central de la asociación (asociacion-ops).
-    # Construye el frontend (npm run build -> ./dist) y lo despliega a Netlify.
-    uses: AHC-Digital-Lab-Org/asociacion-ops/.github/workflows/netlify-reusable.yml@main
-    with:
-      language: 'node'
-      node_version: '24'
-    secrets: inherit # Pasa NETLIFY_AUTH_TOKEN / NETLIFY_SITE_ID automáticamente
+  quality-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: 📦 Install Node Deps
+        run: npm install
+
+      - name: 🧪 Run Tests
+        run: npm test
+
+      - name: 🏗️ Build Project
+        run: npm run build
+
+      - name: 🚀 Deploy to Netlify
+        # Solo despliega a producción en push a main (no en PRs).
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: |
+          npx netlify-cli deploy \
+            --dir=dist \
+            --prod \
+            --filter @ecogestos/frontend \
+            --site=${{ vars.NETLIFY_SITE_ID }} \
+            --auth=${{ secrets.NETLIFY_AUTH_TOKEN }}
