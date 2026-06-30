@@ -1,0 +1,23 @@
+# Configuración de despliegue del FRONTEND estático en Netlify.
+# El pipeline central (asociacion-ops/netlify-reusable.yml) ejecuta `npm run build`
+# y despliega la carpeta `dist/` con `netlify deploy --dir=dist`.
+# Este archivo permite además desplegar desde la UI de Netlify o con `netlify dev`
+# de forma equivalente.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+  # URL pública del backend (API Hono). Debe apuntar al servicio donde se hospede
+  # el backend (Docker en Render/Railway/Fly/VPS). Si se deja vacío, el frontend
+  # usa "/api" como ruta relativa (válido solo si hay un proxy delante).
+  # Configúralo también en Site settings -> Environment variables de Netlify.
+  VITE_API_URL = "/api"
+
+# SPA: todas las rutas del cliente caen en index.html (React Router).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

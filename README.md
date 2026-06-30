@@ -1,61 +1,88 @@
-# 🟢 Template Node.js - Asociación Ops
+# EcoGestos AHC
 
-### 🎯 Objetivo de este repositorio
-Este repositorio tiene como **objetivo principal servir de plantilla oficial** para todos los desarrollos basados en Node.js dentro de la asociación. Su propósito es estandarizar la estructura de los proyectos, garantizar la calidad del código mediante linters automáticos y asegurar un despliegue continuo (CI/CD) fluido hacia Netlify.
+Aplicación web MVP para la Asociación Huella de Carbono. Incluye catálogo público de EcoGestos, plan personal, resumen de impacto, informe imprimible, registro de resultados, tutoría de cohorte, administración editorial, EcoRecorridos, KPIs internos e integración preparada con Moodle.
 
----
+## Stack
 
-### 🚀 Cómo desplegar
-Para comenzar un nuevo proyecto siguiendo nuestros estándares, sigue estos pasos:
+- Frontend: React 18, Vite, TypeScript estricto, React Router, TanStack Query, Recharts y CSS con tokens AHC.
+- Backend: Node 22, Hono, TypeScript, Prisma, SQLite por defecto, Zod, Pino, Vitest.
+- Despliegue: Netlify (frontend estático, vía plantilla de la asociación) + Docker Compose para el stack completo (frontend, API y nginx).
 
-1.  **Solicitud:** Solicita un nuevo repositorio basado en este *template* a través de una conversación en el canal oficial o contactando directamente con tu **Coordinador de Proyecto**.
-2.  **Asignación:** Una vez se te asigne el repositorio, clónalo en tu máquina local:
-    `git clone https://github.com/tu-asociacion/nombre-de-tu-repo.git`
-3.  **Instalación:** Instala las dependencias necesarias (necesitarás Node.js v24 o superior):
-    `npm install`
-4.  **Desarrollo:** Crea una nueva rama para tus cambios (`git checkout -b feature/nueva-funcionalidad`) y empieza a programar. Al hacer *push* a `main`, el sistema desplegará automáticamente.
-
----
-
-### ⚡ Herramientas durante el desarrollo
-Una vez que hayas ejecutado `npm install`, tendrás acceso a los comandos estandarizados de la asociación para gestionar tu ciclo de desarrollo:
-
-*   **`npm run dev`**: Inicia el servidor de desarrollo local con **Vite**. Úsalo para programar con vista previa en tiempo real.
-*   **`npm run lint`**: Ejecuta el motor de **ESLint**. Úsalo para limpiar y corregir automáticamente el estilo de tu código antes de enviarlo (evita que el CI/CD rechace tu código por falta de `camelCase` o puntos y coma).
-*   **`npm test`**: Lanza la suite de pruebas con **Vitest**. Úsalo para verificar que tus componentes y utilidades funcionan correctamente antes de hacer un *push*.
-*   **`npm run build`**: Genera la versión de producción en la carpeta `dist/`. Es el comando que utiliza nuestro sistema de Ops para el despliegue final.
-
----
-
-### 📏 Estándares de Uso
-Para mantener la coherencia en toda la asociación, aplicamos las siguientes reglas:
-
-*   **Estilo de Código**: Es obligatorio el uso de **camelCase** para variables y funciones. El linter bloqueará cualquier Pull Request que no cumpla con esto.
-*   **Formateo**: Usamos [ESLint](https://eslint.org/) con la configuración `recommended`.
-*   **Motor de Construcción**: [Vite](https://vitejs.dev/) para un empaquetado ultra rápido.
-*   **Tests**: [Vitest](https://vitest.dev/) para pruebas unitarias rápidas y modernas.
-
----
-
-### 🧪 Obligación: Tests Unitarios
-Es **responsabilidad del desarrollador** garantizar la estabilidad de su código. El pipeline de despliegue fallará si los tests no pasan. Los archivos de test deben estar ubicados junto al archivo que prueban siguiendo este estándar:
+## Estructura
 
 ```text
-src/
-├── components/
-│   ├── Button.js
-│   └── Button.test.js     <-- Vitest lo encuentra aquí
-├── utils/
-│   ├── format.js
-│   └── format.test.js     <-- Vitest lo encuentra aquí
+apps/
+  backend/   API Hono, Prisma, seed, tests
+  frontend/  React/Vite con pantallas MVP
+packages/
+  shared/    Tipos y constantes compartidas
+docs/        API, manual admin y manual usuario
+material/    Requisitos y datos fuente
+diseño/      Prototipo visual original
 ```
-*Si una funcionalidad no tiene su correspondiente archivo `.test.js`, se considerará incompleta, sin embargo el pipeline seguira adelante*
 
----
+## Comandos
 
-### 🛠️ SOLO PARA DEVOPS
-Esta sección detalla la infraestructura técnica que sostiene este template y cómo se conecta con el sistema central de la asociación.
+```bash
+npm install
+npm run db:generate
+npm run db:push
+npm run db:seed
+npm run dev
+```
 
-*   **package.json**: Actúa como la interfaz universal de comandos. No importa el framework (React, Vue o Vanilla JS), mientras contenga los scripts estándar (lint, test, build), el Workflow Reutilizable podrá procesar el repo sin cambios manuales.
-*   **.eslintrc.json**: Es el motor de gobernanza. Aquí se definen las "leyes" del código (como la obligatoriedad de camelCase). Al estar en la raíz, permite que tanto el editor del desarrollador como el pipeline de GitHub Actions apliquen las mismas reglas de calidad.
-*   **.github/workflows/ci.yml**: Este archivo funciona como un "proxy". No contiene la lógica pesada del despliegue, sino que invoca al Workflow Reutilizable de asociacion-ops. Esto nos permite actualizar la lógica de despliegue de 50 repositorios simultáneamente editando un solo archivo en el repo central de Ops.
+Frontend local: http://localhost:5173  
+Backend local: http://localhost:3000/api/health
+
+## Docker
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+Entrada nginx: http://localhost:8080
+
+## Despliegue en la organización (Netlify + asociacion-ops)
+
+Este repositorio está adaptado a la **plantilla oficial Node** de la asociación
+(`AHC-Digital-Lab-Org/node-template`) y a su pipeline central de CI/CD.
+
+**Cómo funciona el pipeline** (`.github/workflows/main.yml`): al hacer push a `main`,
+se invoca el workflow reutilizable `asociacion-ops/netlify-reusable.yml`, que ejecuta
+el contrato universal `npm install` → `npm test` → `npm run build` → `netlify deploy --dir=dist`.
+
+Por eso `npm run build` construye **solo el frontend** y copia su salida a `./dist`
+(la carpeta que Netlify publica). El backend tiene scripts aparte:
+
+- `npm run build` → frontend estático en `./dist` (lo que despliega Netlify).
+- `npm run build:backend` → compila la API (`apps/backend/dist`).
+- `npm run build:all` → monorepo completo.
+
+**Frontend ↔ backend.** El frontend lee la URL de la API de `VITE_API_URL`
+(definido en `apps/frontend/src/lib/api.ts`, con fallback a `/api`). Netlify solo sirve
+estáticos, así que el backend Hono/Prisma debe hospedarse aparte (Docker en
+Render/Railway/Fly/VPS) y apuntar `VITE_API_URL` a esa URL pública en
+*Site settings → Environment variables* de Netlify.
+
+**Secretos que Ops debe configurar** en el repo/organización (se heredan con
+`secrets: inherit`):
+
+- `NETLIFY_AUTH_TOKEN` (secret) — token de la cuenta de Netlify.
+- `NETLIFY_SITE_ID` (variable) — id del sitio Netlify destino.
+
+**Pasos para publicarlo en la organización** (no se puede subir directamente; lo crea Ops):
+
+1. Pedir al Coordinador de Proyecto / canal de Ops un repo nuevo en `AHC-Digital-Lab-Org`
+   basado en `node-template` (p. ej. `ecogestos-ahc`).
+2. Subir este código a ese repo (`git remote add origin … && git push -u origin main`).
+3. Ops conecta el sitio Netlify y carga `NETLIFY_AUTH_TOKEN` / `NETLIFY_SITE_ID`.
+4. El push a `main` despliega el frontend automáticamente; coordinar con Ops el hosting del backend.
+
+## Decisiones
+
+- El modo inicial de autenticacion usa alias sin contrasena y cookie httpOnly firmada.
+- WordPress SSO, OAuth Moodle, S3/R2 y Matomo quedan preparados por variables de entorno y adaptadores.
+- Moodle se implementa como endpoints de sincronizacion y enlaces de microcurso; requiere credenciales reales para activar llamadas REST.
+- El seed importa los 50 EcoGestos de `material/ecogestos.json` y genera categorías, pasos, factores iniciales, 4 EcoRecorridos, una cohorte demo y un microcurso piloto.
+- En local, `db:push` aplica la migración SQLite inicial en `apps/backend/prisma/dev.db`.

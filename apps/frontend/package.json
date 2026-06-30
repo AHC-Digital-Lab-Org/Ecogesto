@@ -1,0 +1,36 @@
+{
+  "name": "@ecogestos/frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "npm run build --workspace @ecogestos/shared",
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -p tsconfig.json && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "a11y": "axe --chromedriver-path ./node_modules/chromedriver/lib/chromedriver/chromedriver http://localhost:5173/catalogo http://localhost:5173/tutoria"
+  },
+  "dependencies": {
+    "@ecogestos/shared": "*",
+    "@tanstack/react-query": "^5.80.7",
+    "date-fns": "^4.1.0",
+    "fuse.js": "^7.1.0",
+    "html2canvas": "^1.4.1",
+    "i18next": "^25.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.1",
+    "recharts": "^2.15.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@axe-core/cli": "^4.11.3",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.5.2",
+    "chromedriver": "^149.0.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}

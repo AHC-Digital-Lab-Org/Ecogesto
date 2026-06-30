@@ -8,9 +8,10 @@ on:
 
 jobs:
   call-ops-workflow:
-    # Sustituye 'tu-usuario' por el nombre de tu cuenta o asociación en GitHub
+    # Invoca el workflow reutilizable central de la asociación (asociacion-ops).
+    # Construye el frontend (npm run build -> ./dist) y lo despliega a Netlify.
     uses: AHC-Digital-Lab-Org/asociacion-ops/.github/workflows/netlify-reusable.yml@main
     with:
       language: 'node'
       node_version: '24'
-    secrets: inherit # Pasa los tokens de Netlify automáticamente
+    secrets: inherit # Pasa NETLIFY_AUTH_TOKEN / NETLIFY_SITE_ID automáticamente

@@ -1,1 +1,11 @@
 node_modules/
+dist/
+.env
+.env.local
+*.log
+apps/backend/prisma/dev.db
+apps/backend/prisma/dev.db-journal
+apps/backend/uploads/
+coverage/
+.DS_Store
+.vercel

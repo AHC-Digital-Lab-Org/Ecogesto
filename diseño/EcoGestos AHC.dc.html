@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EcoGestos AHC</title>
+<link rel="icon" href="data:,">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">
+<script src="ecogestos-data.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #F4F1E9; color: #222A1A; font-family: 'Nunito Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+  ::selection { background: #A5C6A4; color: #222A1A; }
+  input, select, button, textarea { font-family: inherit; }
+  @media print {
+    body { background: #fff; }
+    .no-print { display: none !important; }
+    .print-page { box-shadow: none !important; border: none !important; }
+  }
+  @media (max-width: 900px) {
+    html, body { overflow-x: hidden; }
+    header.no-print { overflow-x: hidden !important; }
+    header.no-print > div { padding: 10px 16px !important; gap: 10px !important; flex-wrap: wrap !important; align-items: flex-start !important; }
+    header.no-print svg { width: 34px !important; height: 34px !important; }
+    header.no-print nav { width: 100% !important; max-width: calc(100vw - 32px) !important; overflow-x: auto !important; justify-content: flex-start !important; gap: 6px !important; padding-bottom: 4px !important; scrollbar-width: none; }
+    header.no-print nav::-webkit-scrollbar { display: none; }
+    header.no-print nav button { flex: 0 0 auto !important; padding: 8px 10px !important; font-size: 13px !important; }
+    header.no-print nav button:last-child { margin-left: 0 !important; }
+    main { padding: 0 16px !important; }
+    main *, header.no-print * { min-width: 0; }
+    footer.no-print > div { padding: 20px 16px !important; align-items: flex-start !important; }
+    h1[style*="font-size:46px"] { font-size: 38px !important; line-height: 1.07 !important; }
+    h1[style*="font-size:32px"], h1[style*="font-size:30px"] { font-size: 27px !important; line-height: 1.12 !important; }
+    div[style*="grid-template-columns:1.15fr .85fr"],
+    div[style*="grid-template-columns:268px 1fr"],
+    div[style*="grid-template-columns:1fr 340px"],
+    div[style*="grid-template-columns:1fr 300px"],
+    div[style*="grid-template-columns:300px 1fr"],
+    div[style*="grid-template-columns:1.4fr 1fr"],
+    div[style*="grid-template-columns:1.4fr 1fr 1fr 1fr"],
+    div[style*="grid-template-columns:120px 1fr"] { grid-template-columns: 1fr !important; }
+    div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    div[style*="grid-template-columns"] > *,
+    div[style*="display:flex"] > * { min-width: 0 !important; max-width: 100% !important; }
+    div[style*="grid-template-columns:repeat(5,1fr)"],
+    div[style*="grid-template-columns:repeat(4,1fr)"],
+    div[style*="grid-template-columns:repeat(3,1fr)"],
+    div[style*="grid-template-columns:repeat(2,1fr)"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    aside[style*="position:sticky"] { position: static !important; top: auto !important; max-height: none !important; overflow: visible !important; }
+    div[style*="display:flex;align-items:flex-end;justify-content:space-between"] { align-items: flex-start !important; flex-direction: column !important; }
+    div[style*="display:flex;gap:34px"] { gap: 22px !important; flex-wrap: wrap !important; }
+    div[style*="max-width:680px"] { max-width: 100% !important; }
+    div[style*="max-width:860px"] { max-width: 100% !important; padding: 24px !important; }
+    div[style*="overflow:hidden"] { overflow-x: auto !important; }
+    table { min-width: 720px; }
+  }
+  @media (max-width: 520px) {
+    h1[style*="font-size:46px"] { font-size: 36px !important; }
+    div[style*="grid-template-columns:repeat(5,1fr)"],
+    div[style*="grid-template-columns:repeat(4,1fr)"],
+    div[style*="grid-template-columns:repeat(3,1fr)"],
+    div[style*="grid-template-columns:repeat(2,1fr)"] { grid-template-columns: 1fr !important; }
+    div[style*="padding:56px 0 40px"] { padding: 34px 0 28px !important; }
+    div[style*="padding:44px 0 60px"] { padding: 30px 0 42px !important; }
+    div[style*="padding:70px 20px"] { padding: 44px 18px !important; }
+    button { min-height: 38px; }
+  }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#F4F1E9">
+
+  <header class="no-print" style="position:sticky;top:0;z-index:50;background:rgba(244,241,233,0.92);backdrop-filter:blur(8px);border-bottom:1px solid #E1D7C0">
+    <div style="max-width:1240px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <div onClick="{{ goLanding }}" style="display:flex;align-items:center;gap:12px;cursor:pointer">
+        <svg width="44" height="44" viewBox="0 0 46 46" aria-hidden="true">
+          <rect x="1" y="1" width="44" height="44" rx="11" fill="#EAF1E6" stroke="#4F9447" stroke-width="1.5"></rect>
+          <path d="M14.5 27c-2.8 0-4.8-1.9-4.8-4.3s2-4.3 4.6-4.3c.6-2.8 2.9-4.7 5.8-4.7s5.2 1.9 5.8 4.7c2.4 0 3.9 1.7 3.9 3.9 0 2.4-2 4.7-4.9 4.7z" fill="#fff" stroke="#537358" stroke-width="1.3"></path>
+          <text x="22.5" y="23.5" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-size="7.5" font-weight="700" fill="#537358">CO₂</text>
+          <path d="M22.5 28.5 L22.5 34 M19.6 31.3 L22.5 34 L25.4 31.3" stroke="#4F9447" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div style="line-height:1.15">
+          <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:18px;color:#4F9447;letter-spacing:.14em">AHC</div>
+          <div style="font-weight:600;font-size:7.5px;color:#537358;letter-spacing:.09em">ASOCIACIÓN HUELLA DE CARBONO</div>
+        </div>
+        <div style="width:1px;height:30px;background:#D8CBB0;margin:0 4px"></div>
+        <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:18px;color:#222A1A">EcoGestos</div>
+      </div>
+      <nav style="display:flex;align-items:center;gap:4px">
+        <button onClick="{{ goCatalogo }}" style="{{ navCatalogo }}">Catálogo</button>
+        <button onClick="{{ goProgreso }}" style="{{ navProgreso }}">Mi progreso</button>
+        <button onClick="{{ goAdmin }}" style="{{ navAdmin }}">Panel AHC</button>
+        <button onClick="{{ goPlan }}" style="display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:9px;border:1px solid #4F9447;background:#4F9447;color:#fff;font-weight:700;font-size:14px;cursor:pointer;margin-left:6px">
+          <span class="material-symbols-outlined" style="font-size:19px">eco</span>
+          Mi plan
+          <span style="min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#fff;color:#4F9447;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ planCount }}</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main style="max-width:1240px;margin:0 auto;padding:0 28px">
+
+    <!-- ====================== LANDING ====================== -->
+    <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+      <section>
+        <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding:56px 0 40px">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;background:#EAF1E6;color:#537358;font-weight:700;font-size:12px;letter-spacing:.03em;margin-bottom:22px">
+              <span class="material-symbols-outlined" style="font-size:17px">eco</span>
+              ACCIÓN CLIMÁTICA COTIDIANA
+            </div>
+            <h1 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:46px;line-height:1.08;color:#222A1A;margin:0 0 18px;text-wrap:balance">Elige acciones concretas y reduce tu huella, gesto a gesto.</h1>
+            <p style="font-size:18px;line-height:1.55;color:#4d5345;margin:0 0 28px;max-width:520px">Explora un catálogo de EcoGestos medibles, arma tu plan personal y mira el impacto estimado en CO₂, agua y coste. Mejor progreso que perfección.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <button onClick="{{ goCatalogo }}" style="display:flex;align-items:center;gap:9px;padding:14px 24px;border-radius:11px;border:none;background:#4F9447;color:#fff;font-weight:700;font-size:16px;cursor:pointer">
+                Explorar EcoGestos <span class="material-symbols-outlined" style="font-size:20px">arrow_forward</span>
+              </button>
+              <button onClick="{{ goPlan }}" style="padding:14px 24px;border-radius:11px;border:1px solid #C7BCA1;background:transparent;color:#537358;font-weight:700;font-size:16px;cursor:pointer">Ver mi plan</button>
+            </div>
+            <div style="display:flex;gap:34px;margin-top:38px">
+              <div><div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:30px;color:#4F9447">{{ totalGestos }}</div><div style="font-size:13px;color:#6b6f60;font-weight:600">EcoGestos</div></div>
+              <div><div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:30px;color:#4F9447">{{ totalCats }}</div><div style="font-size:13px;color:#6b6f60;font-weight:600">Categorías</div></div>
+              <div><div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:30px;color:#4F9447">{{ totalRecorridos }}</div><div style="font-size:13px;color:#6b6f60;font-weight:600">EcoRecorridos</div></div>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #E7DEC9;border-radius:18px;padding:24px;box-shadow:0 18px 40px -28px rgba(83,115,88,0.5)">
+            <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:15px;color:#537358;margin-bottom:16px;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:19px">trending_up</span>EcoGestos de mayor impacto</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ featured }}" as="g" hint-placeholder-count="4">
+                <div onClick="{{ g.onOpen }}" style="display:flex;align-items:center;gap:13px;padding:12px;border-radius:12px;background:#FAF7F0;cursor:pointer">
+                  <div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:{{ g.catTint }};color:{{ g.catColor }};flex:none"><span class="material-symbols-outlined" style="font-size:22px">{{ g.icono }}</span></div>
+                  <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px;color:#222A1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.nombre }}</div><div style="font-size:12px;color:#6b6f60;font-weight:600">{{ g.catNombre }}</div></div>
+                  <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:15px;color:#4F9447;flex:none">{{ g.co2Txt }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:30px 0 10px">
+          <h2 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:24px;color:#222A1A;margin:0 0 6px">Explora por categoría</h2>
+          <p style="font-size:15px;color:#6b6f60;margin:0 0 22px">Movilidad, energía, alimentación, agua y más. Filtra el catálogo por el área que quieras cambiar.</p>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+            <sc-for list="{{ catCards }}" as="c" hint-placeholder-count="8">
+              <div onClick="{{ c.onClick }}" style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:20px;cursor:pointer;display:flex;flex-direction:column;gap:12px" style-hover="border-color:#4F9447;transform:translateY(-2px)">
+                <div style="width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:{{ c.tint }};color:{{ c.color }}"><span class="material-symbols-outlined" style="font-size:26px">{{ c.icono }}</span></div>
+                <div><div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;color:#222A1A">{{ c.nombre }}</div><div style="font-size:13px;color:#6b6f60;font-weight:600">{{ c.count }} EcoGestos</div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:44px 0 60px">
+          <div style="display:flex;gap:14px"><div style="width:40px;height:40px;border-radius:50%;background:#EAF1E6;color:#4F9447;display:flex;align-items:center;justify-content:center;flex:none;font-family:'Source Sans 3';font-weight:700">1</div><div><div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;color:#222A1A;margin-bottom:4px">Filtra y elige</div><div style="font-size:14px;color:#6b6f60;line-height:1.5">Combina filtros por categoría, perfil, coste, dificultad e impacto hasta encontrar lo que puedes aplicar.</div></div></div>
+          <div style="display:flex;gap:14px"><div style="width:40px;height:40px;border-radius:50%;background:#EAF1E6;color:#4F9447;display:flex;align-items:center;justify-content:center;flex:none;font-family:'Source Sans 3';font-weight:700">2</div><div><div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;color:#222A1A;margin-bottom:4px">Arma tu plan</div><div style="font-size:14px;color:#6b6f60;line-height:1.5">Ajusta porcentaje de aplicación, plazo, prioridad y frecuencia de cada acción.</div></div></div>
+          <div style="display:flex;gap:14px"><div style="width:40px;height:40px;border-radius:50%;background:#EAF1E6;color:#4F9447;display:flex;align-items:center;justify-content:center;flex:none;font-family:'Source Sans 3';font-weight:700">3</div><div><div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;color:#222A1A;margin-bottom:4px">Mide y registra</div><div style="font-size:14px;color:#6b6f60;line-height:1.5">Consulta el impacto en gráficos, genera un informe imprimible y registra tu progreso real.</div></div></div>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ====================== CATÁLOGO ====================== -->
+    <sc-if value="{{ isCatalogo }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:32px 0 60px">
+        <h1 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:30px;color:#222A1A;margin:0 0 6px">Catálogo de EcoGestos</h1>
+        <p style="font-size:15px;color:#6b6f60;margin:0 0 24px">Los filtros se combinan y actualizan los resultados sin perder tu selección.</p>
+        <div style="display:grid;grid-template-columns:268px 1fr;gap:28px;align-items:start">
+          <aside style="position:sticky;top:84px;background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:20px;max-height:calc(100vh - 104px);overflow:auto">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+              <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;color:#222A1A;display:flex;align-items:center;gap:7px"><span class="material-symbols-outlined" style="font-size:20px">tune</span>Filtros</div>
+              <button onClick="{{ clearFilters }}" style="background:none;border:none;color:#4F9447;font-weight:700;font-size:13px;cursor:pointer">Limpiar</button>
+            </div>
+            <sc-for list="{{ filterGroups }}" as="grp" hint-placeholder-count="6">
+              <div style="margin-bottom:18px">
+                <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:12px;color:#537358;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">{{ grp.label }}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:7px">
+                  <sc-for list="{{ grp.options }}" as="opt" hint-placeholder-count="4">
+                    <button onClick="{{ opt.onClick }}" style="{{ opt.style }}">{{ opt.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+            <div style="border-top:1px solid #EAE1CC;padding-top:16px">
+              <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:12px;color:#537358;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Requisitos</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ boolFilters }}" as="b" hint-placeholder-count="3">
+                  <button onClick="{{ b.onClick }}" style="{{ b.style }}"><span class="material-symbols-outlined" style="font-size:17px">{{ b.icon }}</span>{{ b.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </aside>
+
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+              <div style="flex:1;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E7DEC9;border-radius:11px;padding:11px 15px">
+                <span class="material-symbols-outlined" style="font-size:21px;color:#8a8d80">search</span>
+                <input value="{{ q }}" onInput="{{ onSearch }}" placeholder="Buscar EcoGestos por nombre o tema" style="border:none;outline:none;background:transparent;font-size:15px;color:#222A1A;width:100%" />
+              </div>
+              <div style="font-size:14px;color:#6b6f60;font-weight:700;white-space:nowrap">{{ resultCount }} resultados</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+              <sc-for list="{{ catalogo }}" as="g" hint-placeholder-count="8">
+                <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:13px">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+                    <div style="width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:{{ g.catTint }};color:{{ g.catColor }};flex:none"><span class="material-symbols-outlined" style="font-size:24px">{{ g.icono }}</span></div>
+                    <span style="padding:4px 10px;border-radius:999px;background:{{ g.catTint }};color:{{ g.catColor }};font-weight:700;font-size:11px;white-space:nowrap">{{ g.catNombre }}</span>
+                  </div>
+                  <div onClick="{{ g.onOpen }}" style="cursor:pointer;flex:1">
+                    <h3 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;line-height:1.25;color:#222A1A;margin:0 0 6px">{{ g.nombre }}</h3>
+                    <p style="font-size:13.5px;line-height:1.5;color:#6b6f60;margin:0">{{ g.resumen }}</p>
+                  </div>
+                  <div style="display:flex;gap:7px;flex-wrap:wrap">
+                    <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#5a5f50;background:#F4F1E9;border-radius:7px;padding:4px 8px"><span class="material-symbols-outlined" style="font-size:15px">signal_cellular_alt</span>{{ g.difLabel }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#5a5f50;background:#F4F1E9;border-radius:7px;padding:4px 8px"><span class="material-symbols-outlined" style="font-size:15px">payments</span>{{ g.costeLabel }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #F0E8D6;padding-top:12px">
+                    <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:14px;color:#4F9447">{{ g.impactoTxt }}</div>
+                    <button onClick="{{ g.onToggle }}" style="{{ g.addStyle }}"><span class="material-symbols-outlined" style="font-size:18px">{{ g.addIcon }}</span>{{ g.addLabel }}</button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align:center;padding:60px 20px;color:#8a8d80"><span class="material-symbols-outlined" style="font-size:44px">search_off</span><div style="font-weight:700;font-size:17px;color:#5a5f50;margin-top:10px">Sin resultados con estos filtros</div><div style="font-size:14px;margin-top:4px">Prueba a quitar algún filtro o limpia la selección.</div></div>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ====================== FICHA ====================== -->
+    <sc-if value="{{ isFicha }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:24px 0 60px">
+        <button class="no-print" onClick="{{ goCatalogo }}" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:#537358;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:18px"><span class="material-symbols-outlined" style="font-size:19px">arrow_back</span>Volver al catálogo</button>
+        <div style="display:grid;grid-template-columns:1fr 340px;gap:36px;align-items:start">
+          <div>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:{{ ficha.catTint }};color:{{ ficha.catColor }};font-weight:700;font-size:12px"><span class="material-symbols-outlined" style="font-size:16px">{{ ficha.icono }}</span>{{ ficha.catNombre }} · {{ ficha.subcategoria }}</span>
+            <h1 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:32px;line-height:1.14;color:#222A1A;margin:14px 0 12px">{{ ficha.nombre }}</h1>
+            <p style="font-size:17px;line-height:1.6;color:#4d5345;margin:0 0 26px">{{ ficha.resumen }}</p>
+
+            <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:22px;margin-bottom:22px">
+              <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:17px;color:#537358;margin-bottom:16px;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:20px">list_alt</span>Guía paso a paso</div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ ficha.pasos }}" as="p" hint-placeholder-count="4">
+                  <div style="display:flex;gap:13px;align-items:flex-start"><div style="width:26px;height:26px;border-radius:50%;background:#EAF1E6;color:#4F9447;font-family:'Source Sans 3';font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none">{{ p.n }}</div><div style="font-size:15px;line-height:1.5;color:#222A1A;padding-top:2px">{{ p.t }}</div></div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:12px;padding:16px"><div style="font-size:12px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span class="material-symbols-outlined" style="font-size:16px">fact_check</span>Evidencia</div><div style="font-size:14px;color:#4d5345;line-height:1.5">{{ ficha.evidencia }}</div></div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:12px;padding:16px"><div style="font-size:12px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span class="material-symbols-outlined" style="font-size:16px">menu_book</span>Fuente · confianza</div><div style="font-size:14px;color:#4d5345;line-height:1.5">{{ ficha.fuente }} · confianza {{ ficha.confianza }}</div></div>
+            </div>
+          </div>
+
+          <aside style="position:sticky;top:84px;background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px;box-shadow:0 18px 40px -30px rgba(83,115,88,0.5)">
+            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px"><span style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:26px;color:#4F9447">{{ ficha.impactoNum }}</span><span style="font-size:14px;font-weight:700;color:#537358">{{ ficha.impactoUnidad }}</span></div>
+            <div style="font-size:12px;color:#6b6f60;margin-bottom:14px;line-height:1.4">{{ ficha.impacto_estimado }}</div>
+            <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:18px;border-top:1px solid #F0E8D6;padding-top:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:#6b6f60;font-weight:600">Dificultad</span><span style="font-size:14px;font-weight:700;color:#222A1A">{{ ficha.difLabel }}</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:#6b6f60;font-weight:600">Coste</span><span style="font-size:14px;font-weight:700;color:#222A1A">{{ ficha.costeLabel }}</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:#6b6f60;font-weight:600">Periodo</span><span style="font-size:14px;font-weight:700;color:#222A1A">{{ ficha.periodo }}</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:#6b6f60;font-weight:600">Estado editorial</span><span style="{{ ficha.estadoStyle }}">{{ ficha.estado }}</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:#6b6f60;font-weight:600">Microcurso Moodle</span><span style="padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;background:#F4ECDC;color:#C9893F">{{ ficha.moodle }}</span></div>
+            </div>
+            <button onClick="{{ ficha.onToggle }}" style="{{ ficha.addStyleLg }}"><span class="material-symbols-outlined" style="font-size:20px">{{ ficha.addIcon }}</span>{{ ficha.addLabel }}</button>
+            <button class="no-print" onClick="{{ printNow }}" style="width:100%;margin-top:10px;padding:11px;border-radius:10px;border:1px solid #C7BCA1;background:transparent;color:#537358;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"><span class="material-symbols-outlined" style="font-size:18px">print</span>Imprimir ficha</button>
+          </aside>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ====================== PLAN / SELECTOR ====================== -->
+    <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:32px 0 60px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px">
+          <div>
+            <h1 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:30px;color:#222A1A;margin:0 0 6px">Mi plan de acción</h1>
+            <p style="font-size:15px;color:#6b6f60;margin:0">Ajusta cada EcoGesto: cuánto aplicas, cuándo y con qué prioridad. Los totales se recalculan al instante.</p>
+          </div>
+          <button onClick="{{ goResumen }}" style="display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:11px;border:none;background:#4F9447;color:#fff;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap">Ver resumen e informe <span class="material-symbols-outlined" style="font-size:19px">arrow_forward</span></button>
+        </div>
+
+        <sc-if value="{{ planEmpty }}" hint-placeholder-val="{{ true }}">
+          <div style="text-align:center;padding:70px 20px;background:#fff;border:1px dashed #D8CBB0;border-radius:16px">
+            <span class="material-symbols-outlined" style="font-size:48px;color:#A5C6A4">eco</span>
+            <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:20px;color:#222A1A;margin-top:10px">Tu plan está vacío</div>
+            <div style="font-size:15px;color:#6b6f60;margin:6px 0 20px">Añade EcoGestos desde el catálogo para empezar a construir tu plan.</div>
+            <button onClick="{{ goCatalogo }}" style="padding:12px 22px;border-radius:11px;border:none;background:#4F9447;color:#fff;font-weight:700;font-size:15px;cursor:pointer">Explorar catálogo</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ planHas }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-for list="{{ planItems }}" as="it" hint-placeholder-count="3">
+                <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:18px">
+                  <div style="display:flex;align-items:flex-start;gap:13px;margin-bottom:16px">
+                    <div style="width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:{{ it.catTint }};color:{{ it.catColor }};flex:none"><span class="material-symbols-outlined" style="font-size:23px">{{ it.icono }}</span></div>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;color:#222A1A">{{ it.nombre }}</div>
+                      <div style="font-size:12px;color:#6b6f60;font-weight:600">{{ it.catNombre }} · {{ it.difLabel }}</div>
+                    </div>
+                    <div style="text-align:right;flex:none"><div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:17px;color:#4F9447">{{ it.co2Aplicado }} kg</div><div style="font-size:11px;color:#6b6f60;font-weight:600">CO₂/año aplicado</div></div>
+                    <button onClick="{{ it.onRemove }}" style="background:none;border:none;color:#b08c8c;cursor:pointer;flex:none;padding:2px" title="Quitar del plan"><span class="material-symbols-outlined" style="font-size:21px">close</span></button>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:12px;align-items:end">
+                    <div>
+                      <label style="font-size:11px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em">Aplicación · {{ it.porcentaje }}%</label>
+                      <input type="range" min="10" max="100" step="10" value="{{ it.porcentaje }}" onInput="{{ it.onPorcentaje }}" style="width:100%;accent-color:#4F9447;margin-top:8px" />
+                    </div>
+                    <div>
+                      <label style="font-size:11px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px">Plazo</label>
+                      <select value="{{ it.plazo }}" onChange="{{ it.onPlazo }}" style="{{ selStyle }}"><sc-for list="{{ plazoOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o }}">{{ o }}</option></sc-for></select>
+                    </div>
+                    <div>
+                      <label style="font-size:11px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px">Prioridad</label>
+                      <select value="{{ it.prioridad }}" onChange="{{ it.onPrioridad }}" style="{{ selStyle }}"><sc-for list="{{ prioOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o }}">{{ o }}</option></sc-for></select>
+                    </div>
+                    <div>
+                      <label style="font-size:11px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px">Frecuencia</label>
+                      <select value="{{ it.frecuencia }}" onChange="{{ it.onFrecuencia }}" style="{{ selStyle }}"><sc-for list="{{ frecOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o }}">{{ o }}</option></sc-for></select>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <aside style="position:sticky;top:84px;background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px">
+              <div style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;color:#222A1A;margin-bottom:16px">Resumen rápido</div>
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;align-items:center;gap:12px"><div style="width:38px;height:38px;border-radius:10px;background:#EAF1E6;color:#4F9447;display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:21px">cloud</span></div><div><div style="font-family:'Source Sans 3';font-weight:700;font-size:20px;color:#222A1A">{{ tCo2 }} kg</div><div style="font-size:12px;color:#6b6f60;font-weight:600">CO₂ evitado / año</div></div></div>
+                <div style="display:flex;align-items:center;gap:12px"><div style="width:38px;height:38px;border-radius:10px;background:#E6F0F3;color:#3D8FA6;display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:21px">water_drop</span></div><div><div style="font-family:'Source Sans 3';font-weight:700;font-size:20px;color:#222A1A">{{ tAgua }} L</div><div style="font-size:12px;color:#6b6f60;font-weight:600">Agua ahorrada / año</div></div></div>
+                <div style="display:flex;align-items:center;gap:12px"><div style="width:38px;height:38px;border-radius:10px;background:#F4ECE0;color:#8A6D3B;display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:21px">payments</span></div><div><div style="font-family:'Source Sans 3';font-weight:700;font-size:20px;color:#222A1A">{{ tCoste }}</div><div style="font-size:12px;color:#6b6f60;font-weight:600">Inversión estimada</div></div></div>
+              </div>
+              <button onClick="{{ goResumen }}" style="width:100%;margin-top:20px;padding:12px;border-radius:10px;border:none;background:#4F9447;color:#fff;font-weight:700;font-size:15px;cursor:pointer">Ver gráficos e informe</button>
+            </aside>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <!-- ====================== RESUMEN ====================== -->
+    <sc-if value="{{ isResumen }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:32px 0 60px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px">
+          <div>
+            <h1 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:30px;color:#222A1A;margin:0 0 6px">Resumen de impacto</h1>
+            <p style="font-size:15px;color:#6b6f60;margin:0">Visualiza el impacto potencial de tu plan. Todo se recalcula con tu selección.</p>
+          </div>
+          <button onClick="{{ goInforme }}" style="display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:11px;border:none;background:#537358;color:#fff;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap"><span class="material-symbols-outlined" style="font-size:19px">description</span>Informe imprimible</button>
+        </div>
+
+        <sc-if value="{{ planEmpty }}" hint-placeholder-val="{{ true }}">
+          <div style="text-align:center;padding:70px 20px;background:#fff;border:1px dashed #D8CBB0;border-radius:16px"><span class="material-symbols-outlined" style="font-size:48px;color:#A5C6A4">insights</span><div style="font-family:'Source Sans 3';font-weight:700;font-size:20px;color:#222A1A;margin-top:10px">Aún no hay datos que mostrar</div><div style="font-size:15px;color:#6b6f60;margin:6px 0 20px">Añade EcoGestos a tu plan para ver gráficos de impacto.</div><button onClick="{{ goCatalogo }}" style="padding:12px 22px;border-radius:11px;border:none;background:#4F9447;color:#fff;font-weight:700;font-size:15px;cursor:pointer">Explorar catálogo</button></div>
+        </sc-if>
+
+        <sc-if value="{{ planHas }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px">
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:18px"><div style="font-size:12px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">EcoGestos</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:28px;color:#222A1A">{{ planCount }}</div></div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:18px"><div style="font-size:12px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">CO₂ / año</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:28px;color:#4F9447">{{ tCo2 }} kg</div></div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:18px"><div style="font-size:12px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Agua / año</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:28px;color:#3D8FA6">{{ tAgua }} L</div></div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:18px"><div style="font-size:12px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Inversión</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:28px;color:#8A6D3B">{{ tCoste }}</div></div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:18px"><div style="font-size:12px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Dificultad media</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:28px;color:#222A1A">{{ tDif }}</div></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:18px">CO₂ evitado por categoría</div>{{ chartBarras }}</div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:18px">Distribución de acciones</div>{{ chartDonut }}</div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:18px">Impacto acumulado por plazo</div>{{ chartArea }}</div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:4px">Matriz impacto / dificultad</div><div style="font-size:12px;color:#6b6f60;margin-bottom:14px">Tamaño de burbuja = coste</div>{{ chartMatriz }}</div>
+            </div>
+
+            <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px;margin-top:18px">
+              <div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:18px">Ranking de impacto · Top EcoGestos del plan</div>
+              {{ chartRanking }}
+            </div>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <!-- ====================== INFORME ====================== -->
+    <sc-if value="{{ isInforme }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:24px 0 60px">
+        <div class="no-print" style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px">
+          <button onClick="{{ goResumen }}" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:#537358;font-weight:700;font-size:14px;cursor:pointer"><span class="material-symbols-outlined" style="font-size:19px">arrow_back</span>Volver al resumen</button>
+          <button onClick="{{ printNow }}" style="display:flex;align-items:center;gap:8px;padding:11px 20px;border-radius:11px;border:none;background:#4F9447;color:#fff;font-weight:700;font-size:15px;cursor:pointer"><span class="material-symbols-outlined" style="font-size:19px">print</span>Imprimir / Guardar PDF</button>
+        </div>
+
+        <div class="print-page" style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:44px;max-width:860px;margin:0 auto;box-shadow:0 18px 50px -36px rgba(83,115,88,0.5)">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;border-bottom:2px solid #4F9447;padding-bottom:20px;margin-bottom:24px">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;color:#4F9447;font-family:'Source Sans 3';font-weight:700;letter-spacing:.14em;font-size:15px"><span class="material-symbols-outlined" style="font-size:20px">eco</span>AHC · ECOGESTOS</div>
+              <h1 style="font-family:'Source Sans 3';font-weight:700;font-size:30px;color:#222A1A;margin:10px 0 4px">Informe de plan de acción</h1>
+              <div style="font-size:14px;color:#6b6f60">Plan personal · {{ today }} · {{ planCount }} EcoGestos seleccionados</div>
+            </div>
+            <div style="text-align:center;border:1.5px solid #4F9447;border-radius:12px;padding:12px 16px;flex:none"><div style="font-size:11px;color:#537358;font-weight:700;letter-spacing:.06em">SELLO</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:13px;color:#4F9447">AHC</div></div>
+          </div>
+
+          <div style="margin-bottom:26px">
+            <div style="font-family:'Source Sans 3';font-weight:700;font-size:18px;color:#537358;margin-bottom:14px">Resumen ejecutivo</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+              <div style="background:#FAF7F0;border-radius:10px;padding:14px"><div style="font-size:11px;font-weight:700;color:#537358;text-transform:uppercase">CO₂ potencial</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:22px;color:#4F9447">{{ tCo2 }} kg</div></div>
+              <div style="background:#FAF7F0;border-radius:10px;padding:14px"><div style="font-size:11px;font-weight:700;color:#537358;text-transform:uppercase">Agua</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:22px;color:#3D8FA6">{{ tAgua }} L</div></div>
+              <div style="background:#FAF7F0;border-radius:10px;padding:14px"><div style="font-size:11px;font-weight:700;color:#537358;text-transform:uppercase">Inversión</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:22px;color:#8A6D3B">{{ tCoste }}</div></div>
+              <div style="background:#FAF7F0;border-radius:10px;padding:14px"><div style="font-size:11px;font-weight:700;color:#537358;text-transform:uppercase">Dificultad media</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:22px;color:#222A1A">{{ tDif }}</div></div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:26px">
+            <div style="font-family:'Source Sans 3';font-weight:700;font-size:18px;color:#537358;margin-bottom:14px">Gráficos</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+              <div style="border:1px solid #EAE1CC;border-radius:10px;padding:16px"><div style="font-weight:700;font-size:13px;color:#222A1A;margin-bottom:12px">CO₂ por categoría</div>{{ chartBarras }}</div>
+              <div style="border:1px solid #EAE1CC;border-radius:10px;padding:16px"><div style="font-weight:700;font-size:13px;color:#222A1A;margin-bottom:12px">Distribución de acciones</div>{{ chartDonut }}</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:26px">
+            <div style="font-family:'Source Sans 3';font-weight:700;font-size:18px;color:#537358;margin-bottom:14px">Plan priorizado</div>
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead><tr style="text-align:left;color:#537358;border-bottom:1.5px solid #E1D7C0"><th style="padding:9px 8px;font-weight:700">EcoGesto</th><th style="padding:9px 8px;font-weight:700">Categoría</th><th style="padding:9px 8px;font-weight:700">Plazo</th><th style="padding:9px 8px;font-weight:700">Prioridad</th><th style="padding:9px 8px;font-weight:700;text-align:right">CO₂/año</th></tr></thead>
+              <tbody>
+                <sc-for list="{{ tablaPlan }}" as="r" hint-placeholder-count="4">
+                  <tr style="border-bottom:1px solid #F0E8D6"><td style="padding:9px 8px;font-weight:700;color:#222A1A">{{ r.nombre }}</td><td style="padding:9px 8px;color:#5a5f50">{{ r.catNombre }}</td><td style="padding:9px 8px;color:#5a5f50">{{ r.plazo }}</td><td style="padding:9px 8px;color:#5a5f50">{{ r.prioridad }}</td><td style="padding:9px 8px;text-align:right;font-weight:700;color:#4F9447">{{ r.co2Aplicado }} kg</td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="margin-bottom:26px">
+            <div style="font-family:'Source Sans 3';font-weight:700;font-size:18px;color:#537358;margin-bottom:14px">Calendario de ejecución</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ calendario }}" as="c" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start;border-left:3px solid #4F9447;padding:4px 0 4px 14px">
+                  <div style="font-family:'Source Sans 3';font-weight:700;font-size:14px;color:#4F9447">{{ c.p }}</div>
+                  <div style="font-size:13px;color:#4d5345;line-height:1.6">{{ c.lista }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:#FAF7F0;border-radius:10px;padding:16px;font-size:12px;color:#6b6f60;line-height:1.6">
+            <span style="font-weight:700;color:#537358">Aviso · </span>Los impactos son estimaciones basadas en factores de referencia (MITECO, IDAE, GHG Protocol, FAO y estimación AHC) con distinto nivel de confianza. Los resultados reales dependen de tu ejecución. Registra tus evidencias y resultados en el Campus Huella de Carbono (Moodle) para validar tu progreso.
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ====================== MI PROGRESO ====================== -->
+    <sc-if value="{{ isProgreso }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:32px 0 60px">
+        <h1 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:30px;color:#222A1A;margin:0 0 6px">Mi progreso</h1>
+        <p style="font-size:15px;color:#6b6f60;margin:0 0 24px">Sigue tus EcoGestos: pendientes, en curso y completados. Registra resultados para validar tu impacto real.</p>
+
+        <sc-if value="{{ planEmpty }}" hint-placeholder-val="{{ true }}">
+          <div style="text-align:center;padding:70px 20px;background:#fff;border:1px dashed #D8CBB0;border-radius:16px"><span class="material-symbols-outlined" style="font-size:48px;color:#A5C6A4">checklist</span><div style="font-family:'Source Sans 3';font-weight:700;font-size:20px;color:#222A1A;margin-top:10px">Todavía no sigues ningún EcoGesto</div><div style="font-size:15px;color:#6b6f60;margin:6px 0 20px">Añade acciones a tu plan y vuelve aquí para registrar tu avance.</div><button onClick="{{ goCatalogo }}" style="padding:12px 22px;border-radius:11px;border:none;background:#4F9447;color:#fff;font-weight:700;font-size:15px;cursor:pointer">Explorar catálogo</button></div>
+        </sc-if>
+
+        <sc-if value="{{ planHas }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:24px;align-items:stretch">
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A">Avance general</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:22px;color:#4F9447">{{ progPct }}%</div></div>
+                <div style="height:12px;background:#F0E8D6;border-radius:6px;overflow:hidden;margin-bottom:14px"><div style="height:100%;background:#4F9447;border-radius:6px;width:{{ progPctW }}"></div></div>
+                <div style="display:flex;gap:18px;font-size:13px;color:#6b6f60;font-weight:600">
+                  <span><span style="color:#8a8d80;font-weight:700">{{ progPend }}</span> pendientes</span>
+                  <span><span style="color:#C9893F;font-weight:700">{{ progCurso }}</span> en curso</span>
+                  <span><span style="color:#4F9447;font-weight:700">{{ progComp }}</span> completados</span>
+                </div>
+              </div>
+              <div style="background:linear-gradient(135deg,#537358,#4F9447);border-radius:16px;padding:22px;color:#fff;display:flex;flex-direction:column;justify-content:space-between">
+                <div style="font-size:12px;font-weight:700;letter-spacing:.05em;opacity:.9;text-transform:uppercase;display:flex;align-items:center;gap:7px"><span class="material-symbols-outlined" style="font-size:18px">tips_and_updates</span>Siguiente acción sugerida</div>
+                <div style="font-family:'Source Sans 3';font-weight:700;font-size:18px;line-height:1.25;margin:10px 0 0">{{ nextSugerido.nombre }}</div>
+                <button onClick="{{ nextSugerido.onOpen }}" style="margin-top:14px;align-self:flex-start;padding:9px 16px;border-radius:9px;border:none;background:#fff;color:#4F9447;font-weight:700;font-size:14px;cursor:pointer">Ver ficha</button>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start">
+              <sc-for list="{{ progresoCols }}" as="col" hint-placeholder-count="3">
+                <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:16px;min-height:120px">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #F0E8D6"><span class="material-symbols-outlined" style="font-size:19px;color:{{ col.color }}">{{ col.icon }}</span><div style="font-family:'Source Sans 3';font-weight:700;font-size:15px;color:#222A1A">{{ col.titulo }}</div><div style="margin-left:auto;background:#F4F1E9;color:#6b6f60;font-weight:700;font-size:12px;border-radius:999px;padding:2px 9px">{{ col.count }}</div></div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <sc-for list="{{ col.items }}" as="it" hint-placeholder-count="2">
+                      <div style="border:1px solid #EAE1CC;border-radius:12px;padding:13px">
+                        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+                          <div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:{{ it.catTint }};color:{{ it.catColor }};flex:none"><span class="material-symbols-outlined" style="font-size:19px">{{ it.icono }}</span></div>
+                          <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px;color:#222A1A;line-height:1.25">{{ it.nombre }}</div><div style="font-size:11px;color:#6b6f60;font-weight:600">{{ it.catNombre }}</div></div>
+                        </div>
+                        <div style="display:flex;gap:7px;flex-wrap:wrap">
+                          <sc-for list="{{ it.acciones }}" as="a" hint-placeholder-count="2">
+                            <button onClick="{{ a.onClick }}" style="{{ a.style }}"><span class="material-symbols-outlined" style="font-size:15px">{{ a.icon }}</span>{{ a.label }}</button>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{ col.empty }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size:13px;color:#a8aa9c;text-align:center;padding:14px 0">Sin EcoGestos aquí</div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <!-- ====================== REGISTRO DE RESULTADO ====================== -->
+    <sc-if value="{{ isRegistro }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:24px 0 60px;max-width:680px;margin:0 auto">
+        <button onClick="{{ goProgreso }}" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:#537358;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:18px"><span class="material-symbols-outlined" style="font-size:19px">arrow_back</span>Volver a mi progreso</button>
+        <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:28px">
+          <div style="display:flex;align-items:center;gap:13px;margin-bottom:8px">
+            <div style="width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:{{ registro.gesto.catTint }};color:{{ registro.gesto.catColor }};flex:none"><span class="material-symbols-outlined" style="font-size:25px">{{ registro.gesto.icono }}</span></div>
+            <div><div style="font-size:12px;color:#6b6f60;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Registrar resultado</div><div style="font-family:'Source Sans 3';font-weight:700;font-size:20px;color:#222A1A;line-height:1.2">{{ registro.gesto.nombre }}</div></div>
+          </div>
+          <p style="font-size:13.5px;color:#6b6f60;line-height:1.5;margin:0 0 22px;padding-bottom:20px;border-bottom:1px solid #F0E8D6">Evidencia esperada: {{ registro.gesto.evidencia }}</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <div>
+              <label style="font-size:12px;font-weight:700;color:#537358;display:block;margin-bottom:7px">Fecha de registro <span style="color:#C46A6A">*</span></label>
+              <input type="text" inputmode="numeric" value="{{ registro.fecha }}" onChange="{{ registro.setFecha }}" placeholder="AAAA-MM-DD" style="{{ inputStyle }}" />
+              <sc-if value="{{ registro.errFecha }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#C46A6A;margin-top:5px;font-weight:600">Indica una fecha</div></sc-if>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:700;color:#537358;display:block;margin-bottom:7px">Resultado <span style="color:#C46A6A">*</span></label>
+              <select value="{{ registro.resultado }}" onChange="{{ registro.setResultado }}" style="{{ inputStyle }}"><option value="En curso">En curso</option><option value="Completado">Completado</option></select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <div>
+              <label style="font-size:12px;font-weight:700;color:#537358;display:block;margin-bottom:7px">Valor declarado <span style="color:#C46A6A">*</span></label>
+              <input type="text" inputmode="decimal" value="{{ registro.valor }}" onInput="{{ registro.setValor }}" placeholder="Ej. 12" style="{{ inputStyle }}" />
+              <sc-if value="{{ registro.errValor }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#C46A6A;margin-top:5px;font-weight:600">Introduce un valor numérico</div></sc-if>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:700;color:#537358;display:block;margin-bottom:7px">Unidad</label>
+              <input value="{{ registro.unidad }}" onInput="{{ registro.setUnidad }}" placeholder="km, kWh, veces…" style="{{ inputStyle }}" />
+            </div>
+          </div>
+
+          <div style="margin-bottom:16px">
+            <label style="font-size:12px;font-weight:700;color:#537358;display:block;margin-bottom:7px">Comentario</label>
+            <textarea value="{{ registro.comentario }}" onInput="{{ registro.setComentario }}" rows="3" placeholder="Cómo te ha ido, dificultades, aprendizajes…" style="{{ inputStyle }};resize:vertical;line-height:1.5"></textarea>
+          </div>
+
+          <div style="margin-bottom:22px">
+            <label style="font-size:12px;font-weight:700;color:#537358;display:block;margin-bottom:7px">Evidencia (foto o documento)</label>
+            <label style="display:flex;align-items:center;gap:10px;border:1.5px dashed #C7BCA1;border-radius:10px;padding:14px;cursor:pointer;background:#FAF7F0">
+              <span class="material-symbols-outlined" style="font-size:22px;color:#537358">upload_file</span>
+              <span style="font-size:14px;color:#5a5f50;font-weight:600">{{ registro.evidenciaLabel }}</span>
+              <input type="file" onChange="{{ registro.setEvidencia }}" style="display:none" />
+            </label>
+          </div>
+
+          <div style="display:flex;gap:12px">
+            <button onClick="{{ registro.submit }}" style="flex:1;padding:13px;border-radius:11px;border:none;background:#4F9447;color:#fff;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span class="material-symbols-outlined" style="font-size:19px">check_circle</span>Guardar registro</button>
+            <button onClick="{{ goProgreso }}" style="padding:13px 20px;border-radius:11px;border:1px solid #C7BCA1;background:transparent;color:#537358;font-weight:700;font-size:15px;cursor:pointer">Cancelar</button>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ====================== PANEL AHC (ADMIN) ====================== -->
+    <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+      <section style="padding:32px 0 60px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span class="material-symbols-outlined" style="font-size:26px;color:#537358">admin_panel_settings</span>
+          <h1 style="font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:30px;color:#222A1A;margin:0">Panel de gestión AHC</h1>
+        </div>
+        <p style="font-size:15px;color:#6b6f60;margin:0 0 22px">Gobierno del dato: dashboard de impacto, administración de EcoGestos y EcoRecorridos.</p>
+
+        <div style="display:flex;gap:6px;border-bottom:1px solid #E1D7C0;margin-bottom:24px">
+          <sc-for list="{{ adminTabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.onClick }}" style="{{ t.style }}"><span class="material-symbols-outlined" style="font-size:18px">{{ t.icon }}</span>{{ t.label }}</button>
+          </sc-for>
+        </div>
+
+        <!-- ---- DASHBOARD ---- -->
+        <sc-if value="{{ isTabDashboard }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#8a8d80;margin-bottom:16px"><span class="material-symbols-outlined" style="font-size:17px">info</span>Datos agregados de demostración combinados con el catálogo real.</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+              <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="9">
+                <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;padding:18px">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                    <div style="font-size:12px;font-weight:700;color:#537358;text-transform:uppercase;letter-spacing:.04em">{{ k.label }}</div>
+                    <span class="material-symbols-outlined" style="font-size:19px;color:{{ k.color }}">{{ k.icon }}</span>
+                  </div>
+                  <div style="font-family:'Source Sans 3';font-weight:700;font-size:26px;color:#222A1A">{{ k.value }}</div>
+                  <div style="font-size:12px;color:#8a8d80;font-weight:600;margin-top:3px">{{ k.sub }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:18px">CO₂ medio por categoría</div>{{ dashBarras }}</div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:18px">EcoGestos por categoría</div>{{ dashDonut }}</div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:18px">Adopción acumulada (kg CO₂)</div>{{ dashArea }}</div>
+              <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:4px">Matriz impacto / dificultad</div><div style="font-size:12px;color:#6b6f60;margin-bottom:14px">Catálogo publicado · tamaño = coste</div>{{ dashMatriz }}</div>
+            </div>
+            <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:22px;margin-top:18px">
+              <div style="font-family:'Source Sans 3';font-weight:700;font-size:16px;color:#222A1A;margin-bottom:18px">Ranking · Top 10 EcoGestos por impacto</div>
+              {{ dashRanking }}
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ---- ADMIN ECOGESTOS ---- -->
+        <sc-if value="{{ isTabGestos }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+              <div style="flex:1;min-width:220px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #E7DEC9;border-radius:11px;padding:10px 14px">
+                <span class="material-symbols-outlined" style="font-size:20px;color:#8a8d80">search</span>
+                <input value="{{ adminQ }}" onInput="{{ onAdminSearch }}" placeholder="Buscar por nombre o código" style="border:none;outline:none;background:transparent;font-size:14px;color:#222A1A;width:100%" />
+              </div>
+              <select value="{{ adminEstado }}" onChange="{{ onAdminEstado }}" style="{{ selStyle }};width:auto;min-width:170px"><option value="">Todos los estados</option><sc-for list="{{ estadosList }}" as="e" hint-placeholder-count="5"><option value="{{ e }}">{{ e }}</option></sc-for></select>
+              <div style="font-size:13px;color:#6b6f60;font-weight:700;white-space:nowrap">{{ adminCount }} de {{ totalGestos }}</div>
+            </div>
+
+            <sc-if value="{{ bulkActive }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px;background:#EAF1E6;border:1px solid #BFD9BC;border-radius:11px;padding:11px 16px;margin-bottom:14px">
+                <span style="font-weight:700;color:#4F9447;font-size:14px">{{ bulkCount }} seleccionados</span>
+                <div style="width:1px;height:18px;background:#BFD9BC"></div>
+                <sc-for list="{{ bulkActions }}" as="a" hint-placeholder-count="3">
+                  <button onClick="{{ a.onClick }}" style="display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;border:1px solid #4F9447;background:#fff;color:#4F9447;font-weight:700;font-size:13px;cursor:pointer"><span class="material-symbols-outlined" style="font-size:16px">{{ a.icon }}</span>{{ a.label }}</button>
+                </sc-for>
+                <button onClick="{{ clearBulk }}" style="margin-left:auto;background:none;border:none;color:#537358;font-weight:700;font-size:13px;cursor:pointer">Deseleccionar</button>
+              </div>
+            </sc-if>
+
+            <div style="background:#fff;border:1px solid #E7DEC9;border-radius:14px;overflow:hidden">
+              <table style="width:100%;border-collapse:collapse;font-size:13px">
+                <thead>
+                  <tr style="background:#FAF7F0;text-align:left;color:#537358;border-bottom:1px solid #E1D7C0">
+                    <th style="padding:11px 12px;width:36px"></th>
+                    <th style="padding:11px 12px;font-weight:700">Código</th>
+                    <th style="padding:11px 12px;font-weight:700">EcoGesto</th>
+                    <th style="padding:11px 12px;font-weight:700">Categoría</th>
+                    <th style="padding:11px 12px;font-weight:700">Dif.</th>
+                    <th style="padding:11px 12px;font-weight:700;text-align:right">CO₂</th>
+                    <th style="padding:11px 12px;font-weight:700">Confianza</th>
+                    <th style="padding:11px 12px;font-weight:700">Estado editorial</th>
+                    <th style="padding:11px 12px;width:40px"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <sc-for list="{{ adminRows }}" as="r" hint-placeholder-count="10">
+                    <tr style="border-bottom:1px solid #F2EBDB" style-hover="background:#FCFAF5">
+                      <td style="padding:9px 12px"><input type="checkbox" checked="{{ r.checked }}" onChange="{{ r.onCheck }}" style="width:16px;height:16px;accent-color:#4F9447;cursor:pointer" /></td>
+                      <td style="padding:9px 12px;color:#8a8d80;font-weight:700;white-space:nowrap;font-size:12px">{{ r.codigo }}</td>
+                      <td style="padding:9px 12px;font-weight:700;color:#222A1A;max-width:280px">{{ r.nombre }}</td>
+                      <td style="padding:9px 12px"><span style="padding:3px 8px;border-radius:999px;background:{{ r.catTint }};color:{{ r.catColor }};font-weight:700;font-size:11px;white-space:nowrap">{{ r.catNombre }}</span></td>
+                      <td style="padding:9px 12px;color:#5a5f50">{{ r.difLabel }}</td>
+                      <td style="padding:9px 12px;text-align:right;font-weight:700;color:#4F9447;white-space:nowrap">{{ r.co2Cell }}</td>
+                      <td style="padding:9px 12px"><span style="{{ r.confStyle }}">{{ r.confianza }}</span></td>
+                      <td style="padding:9px 12px"><select value="{{ r.estado }}" onChange="{{ r.onEstado }}" style="{{ r.estadoSelStyle }}"><sc-for list="{{ estadosList }}" as="e" hint-placeholder-count="7"><option value="{{ e }}">{{ e }}</option></sc-for></select></td>
+                      <td style="padding:9px 12px"><button onClick="{{ r.onOpen }}" style="background:none;border:none;color:#537358;cursor:pointer;padding:2px" title="Ver ficha"><span class="material-symbols-outlined" style="font-size:19px">visibility</span></button></td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ---- ADMIN ECORRECORRIDOS ---- -->
+        <sc-if value="{{ isTabRecorridos }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-family:'Source Sans 3';font-weight:700;font-size:14px;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">EcoRecorridos</div>
+              <sc-for list="{{ recorridoList }}" as="r" hint-placeholder-count="4">
+                <div onClick="{{ r.onSelect }}" style="{{ r.cardStyle }}">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px"><div style="font-family:'Source Sans 3';font-weight:700;font-size:15px;color:#222A1A">{{ r.nombre }}</div><span style="{{ r.estadoStyle }}">{{ r.estado }}</span></div>
+                  <div style="font-size:12px;color:#6b6f60;font-weight:600">Perfil: {{ r.perfil }} · {{ r.count }} EcoGestos</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="background:#fff;border:1px solid #E7DEC9;border-radius:16px;padding:24px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px">
+                <div>
+                  <div style="font-family:'Source Sans 3';font-weight:700;font-size:21px;color:#222A1A">{{ recorrido.nombre }}</div>
+                  <div style="font-size:13px;color:#6b6f60;margin-top:4px">Perfil objetivo: {{ recorrido.perfil }} · {{ recorrido.count }} EcoGestos · {{ recorrido.co2 }} kg CO₂/año potencial</div>
+                </div>
+                <span style="{{ recorrido.estadoStyle }}">{{ recorrido.estado }}</span>
+              </div>
+              <p style="font-size:14px;color:#4d5345;line-height:1.5;margin:8px 0 20px">{{ recorrido.descripcion }}</p>
+
+              <div style="font-family:'Source Sans 3';font-weight:700;font-size:13px;color:#537358;text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px">Secuencia de EcoGestos</div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+                <sc-for list="{{ recorrido.items }}" as="it" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:12px;border:1px solid #EAE1CC;border-radius:12px;padding:12px 14px">
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <button onClick="{{ it.onUp }}" style="{{ it.upStyle }}"><span class="material-symbols-outlined" style="font-size:17px">keyboard_arrow_up</span></button>
+                      <button onClick="{{ it.onDown }}" style="{{ it.downStyle }}"><span class="material-symbols-outlined" style="font-size:17px">keyboard_arrow_down</span></button>
+                    </div>
+                    <div style="width:28px;height:28px;border-radius:50%;background:#EAF1E6;color:#4F9447;font-family:'Source Sans 3';font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none">{{ it.orden }}</div>
+                    <div style="width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:{{ it.catTint }};color:{{ it.catColor }};flex:none"><span class="material-symbols-outlined" style="font-size:20px">{{ it.icono }}</span></div>
+                    <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px;color:#222A1A">{{ it.nombre }}</div><div style="font-size:11.5px;color:#6b6f60;font-weight:600">{{ it.prereqLabel }}</div></div>
+                    <button onClick="{{ it.onObligatorio }}" style="{{ it.obligStyle }}">{{ it.obligLabel }}</button>
+                    <button onClick="{{ it.onRemove }}" style="background:none;border:none;color:#b08c8c;cursor:pointer;flex:none;padding:2px"><span class="material-symbols-outlined" style="font-size:20px">delete</span></button>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:10px;border-top:1px solid #F0E8D6;padding-top:16px">
+                <span style="font-size:13px;font-weight:700;color:#537358">Añadir EcoGesto:</span>
+                <select value="{{ addRecValue }}" onChange="{{ onAddRecorrido }}" style="{{ selStyle }};max-width:340px"><option value="">Selecciona un EcoGesto…</option><sc-for list="{{ addRecOptions }}" as="o" hint-placeholder-count="6"><option value="{{ o.codigo }}">{{ o.nombre }}</option></sc-for></select>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+  </main>
+
+  <footer class="no-print" style="border-top:1px solid #E1D7C0;margin-top:20px">
+    <div style="max-width:1240px;margin:0 auto;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div style="font-size:13px;color:#6b6f60">Asociación Huella de Carbono · Gavà, Barcelona · Cada gesto cuenta.</div>
+      <div style="font-size:13px;color:#8a8d80">Prototipo navegable · 50 EcoGestos reales</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    screen: 'landing', gestoId: null, q: '',
+    filters: { categoria: [], perfil: [], coste: [], dificultad: [], impacto: [], ambito: [], validado: false, cuantificado: false, comunitaria: false },
+    plan: {}, progress: {}, editorial: {}, recorridos: null,
+    adminTab: 'dashboard', adminQ: '', adminEstado: '', selectedRows: {}, recorridoId: null, addRecValue: '',
+    registroGesto: null, form: { fecha:'', valor:'', unidad:'', comentario:'', evidencia:'', resultado:'Completado' },
+    _loaded: false
+  };
+
+  CATS = [
+    { id:'movilidad', nombre:'Movilidad', color:'#4F9447', icono:'directions_bike' },
+    { id:'energia', nombre:'Energía', color:'#C9893F', icono:'bolt' },
+    { id:'alimentacion', nombre:'Alimentación', color:'#7A9E3C', icono:'restaurant' },
+    { id:'agua', nombre:'Agua', color:'#3D8FA6', icono:'water_drop' },
+    { id:'residuos', nombre:'Residuos', color:'#8A6D3B', icono:'recycling' },
+    { id:'consumo', nombre:'Consumo', color:'#A0617B', icono:'shopping_bag' },
+    { id:'finanzas', nombre:'Finanzas', color:'#5C7CA6', icono:'savings' },
+    { id:'comunidad', nombre:'Comunidad', color:'#537358', icono:'diversity_3' }
+  ];
+  PERFILES = [ {v:'ciudadano',l:'Ciudadano'},{v:'familia',l:'Familia'},{v:'empleado',l:'Empleado'},{v:'comunidad',l:'Comunidad'} ];
+  COSTES = [ {v:'sin coste',l:'Sin coste'},{v:'bajo',l:'Bajo'},{v:'variable',l:'Variable'} ];
+  DIFS = [ {v:'muy fácil',l:'Muy fácil'},{v:'fácil',l:'Fácil'},{v:'moderada',l:'Moderada'},{v:'avanzada',l:'Avanzada'} ];
+  IMPACTOS = [ {v:'bajo',l:'Bajo'},{v:'moderado',l:'Moderado'},{v:'alto',l:'Alto'},{v:'muy_alto',l:'Muy alto'} ];
+  AMBITOS = [ {v:'hogar',l:'Hogar'},{v:'trabajo',l:'Trabajo'},{v:'movilidad',l:'Movilidad'},{v:'alimentacion',l:'Alimentación'},{v:'comunidad',l:'Comunidad'} ];
+  PLAZOS = ['Hoy','Semana 1','Mes 1','Trimestre','Año'];
+  PRIOS = ['Alta','Media','Baja'];
+  FRECS = ['Única','Diaria','Semanal','Mensual'];
+  ESTADOS = ['Borrador','En revisión','Pendiente de cálculo','Validado','Publicado','En revisión periódica','Archivado'];
+  IMPNUM = { muy_alto:4, alto:3, moderado:2, bajo:1, indirecto:1 };
+  IMPLABEL = { muy_alto:'Muy alto', alto:'Alto', moderado:'Moderado', bajo:'Bajo', indirecto:'Indirecto' };
+
+  getGestos(){ return (typeof window!=='undefined' && window.AHC_ECOGESTOS) || []; }
+  cat(id){ return this.CATS.find(c=>c.id===id) || { id, nombre:id, color:'#888', icono:'eco' }; }
+  cap(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+
+  componentDidMount(){
+    this.loadData();
+    try {
+      const raw = localStorage.getItem('ahc_ecogestos_v2');
+      if (raw){ const s = JSON.parse(raw); if (s && typeof s==='object') this.setState({
+        screen: s.screen==='ficha'||s.screen==='registro'?'catalogo':(s.screen||'landing'),
+        plan: s.plan||{}, progress: s.progress||{}, editorial: s.editorial||{},
+        filters: { ...this.state.filters, ...(s.filters||{}) }, q: s.q||'', recorridos: s.recorridos||null
+      }); }
+    } catch(e){}
+  }
+  loadData(){
+    if (this.getGestos().length){
+      if (!this.state.recorridos){
+        const seed = (window.AHC_ECORRECORRIDOS||[]).map(r=>({ ...r, items: r.items.map(i=>({ ...i })) }));
+        this.setState({ recorridos: seed, recorridoId: seed[0] ? seed[0].codigo : null, _loaded:true });
+      } else { this.setState({ _loaded:true, recorridoId: this.state.recorridoId || (this.state.recorridos[0]&&this.state.recorridos[0].codigo) }); }
+    } else { setTimeout(()=>this.loadData(), 60); }
+  }
+  persist(){
+    try {
+      const { screen, plan, filters, q, progress, editorial, recorridos } = this.state;
+      localStorage.setItem('ahc_ecogestos_v2', JSON.stringify({ screen, plan, filters, q, progress, editorial, recorridos }));
+    } catch(e){}
+  }
+  topGo(){ try { window.scrollTo(0,0); } catch(e){} }
+  go(screen){ this.setState({ screen }, ()=>{ this.persist(); this.topGo(); }); }
+  openFicha(id){ this.setState({ screen:'ficha', gestoId:id }, ()=>{ this.persist(); this.topGo(); }); }
+
+  toggleFilter(key,val){ this.setState(s=>{ const arr=s.filters[key]; const has=arr.includes(val); return { filters:{ ...s.filters, [key]: has?arr.filter(x=>x!==val):[...arr,val] } }; }, ()=>this.persist()); }
+  toggleBool(key){ this.setState(s=>({ filters:{ ...s.filters, [key]: !s.filters[key] } }), ()=>this.persist()); }
+  clearFilters(){ this.setState({ filters:{ categoria:[],perfil:[],coste:[],dificultad:[],impacto:[],ambito:[],validado:false,cuantificado:false,comunitaria:false }, q:'' }, ()=>this.persist()); }
+  setCategoria(id){ this.setState(s=>({ filters:{ ...s.filters, categoria:[id] }, screen:'catalogo' }), ()=>{ this.persist(); this.topGo(); }); }
+  togglePlan(id){ this.setState(s=>{ const plan={ ...s.plan }; if(plan[id]) delete plan[id]; else plan[id]={ porcentaje:100, plazo:'Mes 1', prioridad:'Media', frecuencia:'Semanal' }; return { plan }; }, ()=>this.persist()); }
+  updatePlan(id,field,value){ this.setState(s=>({ plan:{ ...s.plan, [id]:{ ...s.plan[id], [field]:value } } }), ()=>this.persist()); }
+
+  setEstadoProgreso(id, estado){ this.setState(s=>({ progress:{ ...s.progress, [id]:{ ...(s.progress[id]||{registros:[]}), estado } } }), ()=>this.persist()); }
+  openRegistro(id){ const g=this.getGestos().find(x=>x.codigo===id); this.setState({ screen:'registro', registroGesto:id, form:{ fecha:new Date().toISOString().slice(0,10), valor:'', unidad: g&&g.agua>0?'litros': (g&&g.co2>0?'kg CO₂':''), comentario:'', evidencia:'', resultado:'Completado', errFecha:false, errValor:false } }, ()=>this.topGo()); }
+  setForm(field,value){ this.setState(s=>({ form:{ ...s.form, [field]:value } })); }
+  submitRegistro(){
+    const f=this.state.form; const id=this.state.registroGesto;
+    const errFecha=!f.fecha; const errValor=!(f.valor!=='' && !isNaN(Number(f.valor)));
+    if(errFecha||errValor){ this.setState(s=>({ form:{ ...s.form, errFecha, errValor } })); return; }
+    const g=this.getGestos().find(x=>x.codigo===id);
+    const estado = f.resultado==='Completado' ? 'completada' : 'en_curso';
+    const co2Real = f.resultado==='Completado' ? (g.co2||0) : Math.round((g.co2||0)*0.4);
+    const reg = { fecha:f.fecha, valor:f.valor, unidad:f.unidad, comentario:f.comentario, evidencia:f.evidencia||'(sin archivo)', co2Real, resultado:f.resultado };
+    this.setState(s=>{ const prev=s.progress[id]||{registros:[]}; return { progress:{ ...s.progress, [id]:{ estado, registros:[...(prev.registros||[]), reg] } }, screen:'progreso' }; }, ()=>{ this.persist(); this.topGo(); });
+  }
+
+  setAdminTab(t){ this.setState({ adminTab:t }); }
+  setEditorial(id, estado){ this.setState(s=>({ editorial:{ ...s.editorial, [id]:estado } }), ()=>this.persist()); }
+  effEstado(g){ return this.state.editorial[g.codigo] || g.estado; }
+  toggleRow(id){ this.setState(s=>{ const sel={ ...s.selectedRows }; if(sel[id]) delete sel[id]; else sel[id]=true; return { selectedRows:sel }; }); }
+  clearBulk(){ this.setState({ selectedRows:{} }); }
+  bulkSet(estado){ this.setState(s=>{ const ed={ ...s.editorial }; Object.keys(s.selectedRows).forEach(id=>{ ed[id]=estado; }); return { editorial:ed, selectedRows:{} }; }, ()=>this.persist()); }
+
+  selRecorrido(){ return (this.state.recorridos||[]).find(r=>r.codigo===this.state.recorridoId) || (this.state.recorridos||[])[0] || null; }
+  setRecorrido(id){ this.setState({ recorridoId:id }); }
+  mutRecorrido(fn){ this.setState(s=>({ recorridos: s.recorridos.map(r=> r.codigo===s.recorridoId ? fn({ ...r, items:r.items.map(i=>({...i})) }) : r ) }), ()=>this.persist()); }
+  moveRecItem(idx, dir){ this.mutRecorrido(r=>{ const j=idx+dir; if(j<0||j>=r.items.length) return r; const a=r.items.slice(); const t=a[idx]; a[idx]=a[j]; a[j]=t; r.items=a; return r; }); }
+  removeRecItem(idx){ this.mutRecorrido(r=>{ r.items=r.items.filter((_,i)=>i!==idx); return r; }); }
+  toggleObligatorio(idx){ this.mutRecorrido(r=>{ r.items[idx].obligatorio=!r.items[idx].obligatorio; return r; }); }
+  addRecorrido(codigo){ if(!codigo) return; this.mutRecorrido(r=>{ if(!r.items.some(i=>i.codigo===codigo)) r.items.push({ codigo, obligatorio:false, prerequisito:null }); return r; }); }
+
+  /* ---------- decorate ---------- */
+  deco(g){
+    const c=this.cat(g.categoriaId);
+    const inPlan=!!this.state.plan[g.codigo];
+    const impactoUnidad = g.co2>0 ? 'kg CO₂/año' : (g.agua>0 ? 'L agua/año' : '');
+    const impactoNum = g.co2>0 ? g.co2 : (g.agua>0 ? g.agua.toLocaleString('es-ES') : '—');
+    const co2Txt = g.co2>0 ? ('−'+g.co2+' kg') : (g.agua>0 ? ('−'+(g.agua>=1000?Math.round(g.agua/1000)+' m³':g.agua+' L')) : 'Indir.');
+    const impactoTxt = g.co2>0 ? (g.co2+' kg CO₂/año') : (g.agua>0 ? (g.agua.toLocaleString('es-ES')+' L agua/año') : 'Impacto indirecto');
+    const addBase = { display:'inline-flex',alignItems:'center',justifyContent:'center',gap:'6px',padding:'8px 13px',borderRadius:'9px',border:'1px solid #4F9447',fontWeight:700,fontSize:'13px',cursor:'pointer',whiteSpace:'nowrap' };
+    const addStyle = inPlan ? { ...addBase, background:'#4F9447', color:'#fff' } : { ...addBase, background:'#fff', color:'#4F9447' };
+    const addStyleLg = { ...addStyle, width:'100%', padding:'13px', fontSize:'15px', borderRadius:'10px' };
+    return { ...g, catNombre:c.nombre, catColor:c.color, catTint:c.color+'1F',
+      difLabel:this.cap(g.dificultad), costeLabel:this.cap(g.coste), impactoNivelLabel:this.IMPLABEL[g.impactoNivel]||'—',
+      impNum:this.IMPNUM[g.impactoNivel]||1, impactoUnidad, impactoNum, co2Txt, impactoTxt,
+      estado:this.effEstado(g), estadoStyle:this.estadoStyle(this.effEstado(g)),
+      inPlan, addLabel: inPlan?'En tu plan':'Añadir', addIcon: inPlan?'check':'add', addStyle, addStyleLg,
+      pasos: (g.guia_pasos||[]).map((t,i)=>({ n:i+1, t: String(t).replace(/^\s*\d+\.\s*/,'') })),
+      onOpen: ()=>this.openFicha(g.codigo), onToggle: ()=>this.togglePlan(g.codigo) };
+  }
+
+  estadoStyle(estado){
+    const map = { 'Borrador':['#8a8d80','#EFEADB'],'En revisión':['#C9893F','#F6ECD9'],'Pendiente de cálculo':['#A0617B','#F2E4EB'],'Validado':['#3D8FA6','#E0EEF2'],'Publicado':['#4F9447','#E7F0E5'],'En revisión periódica':['#5C7CA6','#E5ECF4'],'Archivado':['#9a9a90','#ECECE5'] };
+    const [c,b]=map[estado]||['#8a8d80','#EFEADB'];
+    return { padding:'3px 9px', borderRadius:'999px', fontSize:'11px', fontWeight:700, background:b, color:c, whiteSpace:'nowrap' };
+  }
+
+  filtered(){
+    const { q, filters } = this.state; const qq=q.trim().toLowerCase();
+    return this.getGestos().filter(g=>{
+      if(filters.categoria.length && !filters.categoria.includes(g.categoriaId)) return false;
+      if(filters.perfil.length && !filters.perfil.some(p=>(g.perfiles||[]).includes(p))) return false;
+      if(filters.coste.length && !filters.coste.includes(g.coste)) return false;
+      if(filters.dificultad.length && !filters.dificultad.includes(g.dificultad)) return false;
+      if(filters.impacto.length && !filters.impacto.includes(g.impactoNivel)) return false;
+      if(filters.ambito.length && !filters.ambito.includes(g.ambito)) return false;
+      if(filters.validado && !g.validado) return false;
+      if(filters.cuantificado && !(g.co2>0)) return false;
+      if(filters.comunitaria && !(g.perfiles||[]).includes('comunidad')) return false;
+      if(qq){ const t=(g.nombre+' '+g.resumen+' '+g.subcategoria+' '+g.codigo).toLowerCase(); if(!t.includes(qq)) return false; }
+      return true;
+    });
+  }
+
+  planArr(){
+    return Object.keys(this.state.plan).map(id=>{
+      const g=this.getGestos().find(x=>x.codigo===id); if(!g) return null;
+      const it=this.state.plan[id]; const d=this.deco(g);
+      const co2Aplicado=Math.round((g.co2||0)*it.porcentaje/100);
+      const aguaAp=Math.round((g.agua||0)*it.porcentaje/100);
+      const prog=this.state.progress[id]; const estadoProg = prog ? prog.estado : 'pendiente';
+      return { ...d, ...it, co2Aplicado, aguaAp, estadoProg,
+        onPorcentaje:(e)=>this.updatePlan(id,'porcentaje',Number(e.target.value)),
+        onPlazo:(e)=>this.updatePlan(id,'plazo',e.target.value),
+        onPrioridad:(e)=>this.updatePlan(id,'prioridad',e.target.value),
+        onFrecuencia:(e)=>this.updatePlan(id,'frecuencia',e.target.value),
+        onRemove:()=>this.togglePlan(id) };
+    }).filter(Boolean);
+  }
+  totals(){
+    const items=this.planArr();
+    const co2=items.reduce((a,b)=>a+b.co2Aplicado,0);
+    const agua=items.reduce((a,b)=>a+b.aguaAp,0);
+    const costeEur=items.reduce((a,b)=>a+(b.costeEur||0),0);
+    const difMedia=items.length? items.reduce((a,b)=>a+b.difNum,0)/items.length : 0;
+    const difLabel=['—','Muy fácil','Fácil','Moderada','Avanzada'][Math.round(difMedia)]||'—';
+    return { co2, agua, costeEur, difLabel, count:items.length };
+  }
+
+  /* ---------- generic chart primitives ---------- */
+  barsEl(data, unit){
+    const el=React.createElement; const max=Math.max(1,...data.map(d=>d.total));
+    if(!data.length) return el('div',{style:{color:'#8a8d80',fontSize:'14px',padding:'10px 0'}},'Sin datos suficientes todavía.');
+    return el('div',{style:{display:'flex',flexDirection:'column',gap:'11px'}}, data.map(d=>
+      el('div',{key:d.id,style:{display:'flex',alignItems:'center',gap:'12px'}},
+        el('div',{style:{width:'96px',fontSize:'13px',color:'#222A1A',textAlign:'right',flex:'none',fontWeight:600}},d.nombre),
+        el('div',{style:{flex:1,height:'20px',background:'#F0E8D6',borderRadius:'5px',overflow:'hidden'}},
+          el('div',{style:{width:(d.total/max*100)+'%',height:'100%',background:d.color,borderRadius:'5px',minWidth:'3px'}})),
+        el('div',{style:{width:'66px',fontSize:'13px',fontWeight:700,color:'#537358',flex:'none'}},d.total+' '+unit)
+      )
+    ));
+  }
+  donutEl(data){
+    const el=React.createElement; const total=data.reduce((a,b)=>a+b.count,0);
+    if(!total) return el('div',{style:{color:'#8a8d80',fontSize:'14px',padding:'10px 0'}},'Sin datos todavía.');
+    const R=54,C=2*Math.PI*R; let off=0;
+    const circles=data.map(d=>{ const len=d.count/total*C; const cir=el('circle',{key:d.id,cx:70,cy:70,r:R,fill:'none',stroke:d.color,strokeWidth:20,strokeDasharray:len+' '+(C-len),strokeDashoffset:-off,transform:'rotate(-90 70 70)'}); off+=len; return cir; });
+    return el('div',{style:{display:'flex',gap:'22px',alignItems:'center',flexWrap:'wrap'}},
+      el('svg',{width:140,height:140,viewBox:'0 0 140 140',style:{flex:'none'}}, ...circles,
+        el('text',{x:70,y:66,textAnchor:'middle',style:{font:"700 22px 'Source Sans 3'",fill:'#222A1A'}},String(total)),
+        el('text',{x:70,y:84,textAnchor:'middle',style:{font:"400 11px 'Nunito Sans'",fill:'#6b6f60'}},'total')),
+      el('div',{style:{display:'flex',flexDirection:'column',gap:'7px'}}, data.map(d=>
+        el('div',{key:d.id,style:{display:'flex',alignItems:'center',gap:'8px',fontSize:'13px',color:'#222A1A'}},
+          el('span',{style:{width:'11px',height:'11px',borderRadius:'3px',background:d.color,flex:'none'}}),
+          el('span',{style:{fontWeight:600}},d.nombre),
+          el('span',{style:{color:'#6b6f60'}},'· '+d.count))))
+    );
+  }
+  areaEl(pts, fmt){
+    const el=React.createElement;
+    const W=440,H=200,pl=44,pb=34,pt=14,pr=14; const max=Math.max(1,...pts.map(p=>p.v));
+    const X=i=> pl + i*((W-pl-pr)/(pts.length-1));
+    const Y=v=> (H-pb) - (v/max)*((H-pb)-pt);
+    const line=pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+    const area=line+(' L'+X(pts.length-1).toFixed(1)+' '+(H-pb)+' L'+X(0).toFixed(1)+' '+(H-pb)+' Z');
+    const grid=[0,0.5,1].map((f,i)=> el('line',{key:'g'+i,x1:pl,x2:W-pr,y1:(H-pb)-f*((H-pb)-pt),y2:(H-pb)-f*((H-pb)-pt),stroke:'#EAE1CC',strokeWidth:1}));
+    return el('svg',{width:'100%',viewBox:'0 0 '+W+' '+H,style:{maxWidth:'100%'}},
+      ...grid,
+      el('path',{d:area,fill:'#4F944722'}),
+      el('path',{d:line,fill:'none',stroke:'#4F9447',strokeWidth:2.5,strokeLinejoin:'round',strokeLinecap:'round'}),
+      ...pts.map((p,i)=>el('circle',{key:'c'+i,cx:X(i),cy:Y(p.v),r:4,fill:'#fff',stroke:'#4F9447',strokeWidth:2})),
+      ...pts.map((p,i)=>el('text',{key:'t'+i,x:X(i),y:H-12,textAnchor:'middle',style:{font:"600 11px 'Nunito Sans'",fill:'#6b6f60'}},p.label)),
+      ...pts.map((p,i)=> p.v? el('text',{key:'v'+i,x:X(i),y:Y(p.v)-10,textAnchor:'middle',style:{font:"700 10px 'Source Sans 3'",fill:'#537358'}},fmt?fmt(p.v):String(p.v)) : null)
+    );
+  }
+  matrixEl(items){
+    const el=React.createElement;
+    if(!items.length) return el('div',{style:{color:'#8a8d80',fontSize:'14px',padding:'10px 0'}},'Sin datos todavía.');
+    const W=440,H=240,pl=44,pb=42,pt=14,pr=18;
+    const X=n=> pl + ((n-1)/3)*((W-pl-pr));
+    const Y=n=> (H-pb) - ((n-1)/3)*((H-pb)-pt);
+    const grid=[1,2,3,4].map(n=> el('g',{key:'gx'+n},
+      el('line',{x1:X(n),x2:X(n),y1:pt,y2:H-pb,stroke:'#F0E8D6',strokeWidth:1}),
+      el('line',{x1:pl,x2:W-pr,y1:Y(n),y2:Y(n),stroke:'#F0E8D6',strokeWidth:1}) ));
+    const dots=items.map((it,i)=> el('circle',{key:'d'+i,cx:X(it.difNum),cy:Y(it.impNum),r:6+it.costeNum*3,fill:it.catColor+'B3',stroke:'#fff',strokeWidth:1.5}));
+    return el('svg',{width:'100%',viewBox:'0 0 '+W+' '+H,style:{maxWidth:'100%'}},
+      ...grid,
+      el('line',{x1:pl,x2:W-pr,y1:H-pb,y2:H-pb,stroke:'#C7BCA1',strokeWidth:1.5}),
+      el('line',{x1:pl,x2:pl,y1:pt,y2:H-pb,stroke:'#C7BCA1',strokeWidth:1.5}),
+      ...dots,
+      el('text',{x:(pl+W-pr)/2,y:H-8,textAnchor:'middle',style:{font:"700 11px 'Nunito Sans'",fill:'#537358'}},'Dificultad →'),
+      el('text',{x:14,y:(pt+H-pb)/2,textAnchor:'middle',transform:'rotate(-90 14 '+((pt+H-pb)/2)+')',style:{font:"700 11px 'Nunito Sans'",fill:'#537358'}},'Impacto →')
+    );
+  }
+  rankingEl(items){
+    const el=React.createElement; const max=Math.max(1,...items.map(d=>d.val));
+    if(!items.length) return el('div',{style:{color:'#8a8d80',fontSize:'14px',padding:'10px 0'}},'Sin datos todavía.');
+    return el('div',{style:{display:'flex',flexDirection:'column',gap:'9px'}}, items.map((d,i)=>
+      el('div',{key:d.codigo,style:{display:'flex',alignItems:'center',gap:'12px'}},
+        el('div',{style:{width:'22px',fontFamily:"'Source Sans 3'",fontWeight:700,fontSize:'14px',color:'#A5A99A',flex:'none',textAlign:'right'}},String(i+1)),
+        el('div',{style:{width:'30px',height:'30px',borderRadius:'8px',background:d.catColor+'1F',color:d.catColor,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}},
+          el('span',{className:'material-symbols-outlined',style:{fontSize:'18px'}},d.icono)),
+        el('div',{style:{flex:1,minWidth:0}},
+          el('div',{style:{fontWeight:700,fontSize:'14px',color:'#222A1A',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}},d.nombre),
+          el('div',{style:{height:'6px',background:'#F0E8D6',borderRadius:'3px',marginTop:'5px',overflow:'hidden'}},
+            el('div',{style:{width:(d.val/max*100)+'%',height:'100%',background:d.catColor,borderRadius:'3px'}}))),
+        el('div',{style:{width:'62px',textAlign:'right',fontFamily:"'Source Sans 3'",fontWeight:700,fontSize:'14px',color:'#4F9447',flex:'none'}},d.val+' kg')
+      )
+    ));
+  }
+
+  /* ---------- plan charts ---------- */
+  chartBarras(){ const items=this.planArr(); const data=this.CATS.map(c=>({ ...c, total: items.filter(i=>i.categoriaId===c.id).reduce((a,b)=>a+b.co2Aplicado,0) })).filter(d=>d.total>0).sort((a,b)=>b.total-a.total); return this.barsEl(data,'kg'); }
+  chartDonut(){ const items=this.planArr(); const data=this.CATS.map(c=>({ ...c, count: items.filter(i=>i.categoriaId===c.id).length })).filter(d=>d.count>0); return this.donutEl(data); }
+  chartArea(){ const items=this.planArr(); const buckets=this.PLAZOS.map(p=>({ p, co2: items.filter(i=>i.plazo===p).reduce((a,b)=>a+b.co2Aplicado,0) })); let cum=0; const pts=buckets.map(b=>{ cum+=b.co2; return { label:b.p, v:cum }; }); return this.areaEl(pts); }
+  chartMatriz(){ const items=this.planArr().filter(i=>i.co2>0||i.impNum>1); return this.matrixEl(items); }
+  chartRanking(){ const items=this.planArr().map(i=>({ ...i, val:i.co2Aplicado })).sort((a,b)=>b.val-a.val).slice(0,10); return this.rankingEl(items); }
+
+  /* ---------- dashboard charts (catalog-wide) ---------- */
+  publicados(){ return this.getGestos().filter(g=>{ const e=this.effEstado(g); return e==='Publicado'||e==='Validado'; }); }
+  dashBarras(){ const pub=this.getGestos(); const data=this.CATS.map(c=>{ const xs=pub.filter(g=>g.categoriaId===c.id && g.co2>0); const avg=xs.length? Math.round(xs.reduce((a,b)=>a+b.co2,0)/xs.length):0; return { ...c, total:avg }; }).filter(d=>d.total>0).sort((a,b)=>b.total-a.total); return this.barsEl(data,'kg'); }
+  dashDonut(){ const all=this.getGestos(); const data=this.CATS.map(c=>({ ...c, count: all.filter(g=>g.categoriaId===c.id).length })).filter(d=>d.count>0); return this.donutEl(data); }
+  dashArea(){ const pts=[{label:'Ene',v:8200},{label:'Feb',v:21000},{label:'Mar',v:34500},{label:'Abr',v:52000},{label:'May',v:68000},{label:'Jun',v:84500}]; return this.areaEl(pts, v=> v>=1000?Math.round(v/1000)+'k':String(v)); }
+  dashMatriz(){ const items=this.publicados().filter(g=>g.co2>0).map(g=>({ difNum:g.difNum, impNum:this.IMPNUM[g.impactoNivel]||1, costeNum:g.costeNum, catColor:this.cat(g.categoriaId).color })); return this.matrixEl(items); }
+  dashRanking(){ const items=[...this.getGestos()].filter(g=>g.co2>0).sort((a,b)=>b.co2-a.co2).slice(0,10).map(g=>({ codigo:g.codigo, nombre:g.nombre, icono:g.icono, catColor:this.cat(g.categoriaId).color, val:g.co2 })); return this.rankingEl(items); }
+
+  renderVals(){
+    const s=this.state; const gestos=this.getGestos();
+    const navBase = { padding:'9px 14px', borderRadius:'9px', border:'none', background:'transparent', color:'#537358', fontWeight:700, fontSize:'14px', cursor:'pointer' };
+    const navActive = { ...navBase, background:'#EAF1E6', color:'#4F9447' };
+    const chip = { padding:'6px 11px', borderRadius:'999px', border:'1px solid', fontWeight:600, fontSize:'12px', cursor:'pointer', lineHeight:1 };
+    const chipOn = { ...chip, background:'#4F9447', color:'#fff', borderColor:'#4F9447' };
+    const chipOff = { ...chip, background:'#fff', color:'#537358', borderColor:'#D8CBB0' };
+    const boolBase = { display:'flex', alignItems:'center', gap:'7px', padding:'8px 11px', borderRadius:'9px', border:'1px solid', fontWeight:600, fontSize:'13px', cursor:'pointer', textAlign:'left', width:'100%' };
+    const boolOn = { ...boolBase, background:'#EAF1E6', color:'#4F9447', borderColor:'#4F9447' };
+    const boolOff = { ...boolBase, background:'#fff', color:'#5a5f50', borderColor:'#E1D7C0' };
+    const selStyle = { width:'100%', padding:'9px 10px', borderRadius:'8px', border:'1px solid #D8CBB0', background:'#fff', color:'#222A1A', fontWeight:600, fontSize:'13px', cursor:'pointer' };
+    const inputStyle = { width:'100%', padding:'11px 13px', borderRadius:'10px', border:'1px solid #D8CBB0', background:'#FCFAF5', color:'#222A1A', fontSize:'14px', outline:'none' };
+
+    const fg = (key,label,opts)=>({ label, options: opts.map(o=>({ label:o.l, onClick:()=>this.toggleFilter(key,o.v), style: s.filters[key].includes(o.v)?chipOn:chipOff })) });
+    const filterGroups = [
+      fg('categoria','Categoría', this.CATS.map(c=>({ v:c.id, l:c.nombre }))),
+      fg('perfil','Perfil', this.PERFILES),
+      fg('coste','Coste', this.COSTES),
+      fg('dificultad','Dificultad', this.DIFS),
+      fg('impacto','Impacto', this.IMPACTOS),
+      fg('ambito','Ámbito', this.AMBITOS)
+    ];
+    const boolFilters = [
+      { label:'Cálculo validado', key:'validado', icon:'verified' },
+      { label:'CO₂ cuantificado', key:'cuantificado', icon:'analytics' },
+      { label:'Acción comunitaria', key:'comunitaria', icon:'groups' }
+    ].map(b=>({ label:b.label, icon:b.icon, onClick:()=>this.toggleBool(b.key), style: s.filters[b.key]?boolOn:boolOff }));
+
+    const catalogo = this.filtered().map(g=>this.deco(g));
+    const fichaG = s.gestoId ? gestos.find(g=>g.codigo===s.gestoId) : null;
+    const ficha = fichaG ? this.deco(fichaG) : null;
+
+    const planItems = this.planArr();
+    const t = this.totals();
+    const tablaPlan = [...planItems].sort((a,b)=>b.co2Aplicado-a.co2Aplicado);
+    const calendario = this.PLAZOS.map(p=>{ const list=planItems.filter(i=>i.plazo===p); return { p, lista: list.length? list.map(i=>i.nombre).join(' · ') : '—' }; });
+    const featured = [...gestos].filter(g=>g.co2>0).sort((a,b)=>b.co2-a.co2).slice(0,4).map(g=>this.deco(g));
+    const catCards = this.CATS.map(c=>({ ...c, tint:c.color+'1F', count: gestos.filter(g=>g.categoriaId===c.id).length, onClick:()=>this.setCategoria(c.id) }));
+
+    // ---- Mi progreso ----
+    const estadoOf = (it)=> it.estadoProg || 'pendiente';
+    const progComp = planItems.filter(i=>estadoOf(i)==='completada').length;
+    const progCurso = planItems.filter(i=>estadoOf(i)==='en_curso').length;
+    const progPend = planItems.filter(i=>estadoOf(i)==='pendiente').length;
+    const progPct = planItems.length ? Math.round(progComp/planItems.length*100) : 0;
+    const actBtn = (label,icon,on,active)=>({ label, icon, onClick:on, style:{ display:'inline-flex',alignItems:'center',gap:'5px',padding:'6px 10px',borderRadius:'8px',border:'1px solid',fontWeight:700,fontSize:'12px',cursor:'pointer', ...(active?{background:'#4F9447',color:'#fff',borderColor:'#4F9447'}:{background:'#fff',color:'#537358',borderColor:'#D8CBB0'}) } });
+    const itemAcc = (it)=>{ const e=estadoOf(it); return [
+      actBtn('Pendiente','radio_button_unchecked',()=>this.setEstadoProgreso(it.codigo,'pendiente'), e==='pendiente'),
+      actBtn('En curso','timelapse',()=>this.setEstadoProgreso(it.codigo,'en_curso'), e==='en_curso'),
+      actBtn('Registrar','edit_note',()=>this.openRegistro(it.codigo), false)
+    ]; };
+    const mkCol=(titulo,estado,color,icon)=>{ const list=planItems.filter(i=>estadoOf(i)===estado).map(it=>({ ...it, acciones:itemAcc(it) })); return { titulo, color, icon, count:list.length, items:list, empty:list.length===0 }; };
+    const progresoCols = [ mkCol('Pendientes','pendiente','#8a8d80','radio_button_unchecked'), mkCol('En curso','en_curso','#C9893F','timelapse'), mkCol('Completados','completada','#4F9447','check_circle') ];
+    const pend = planItems.filter(i=>estadoOf(i)!=='completada');
+    let nextSug = pend.sort((a,b)=>b.co2-a.co2)[0];
+    if(!nextSug){ const notIn=gestos.filter(g=>!s.plan[g.codigo] && g.co2>0).sort((a,b)=>b.co2-a.co2)[0]; nextSug = notIn?this.deco(notIn):{ nombre:'Has completado tu plan. Explora nuevos EcoGestos.', onOpen:()=>this.go('catalogo') }; }
+
+    // ---- registro ----
+    const regG = s.registroGesto ? gestos.find(g=>g.codigo===s.registroGesto) : null;
+    const registro = regG ? { gesto:this.deco(regG), fecha:s.form.fecha, valor:s.form.valor, unidad:s.form.unidad, comentario:s.form.comentario, resultado:s.form.resultado,
+      evidenciaLabel: s.form.evidencia || 'Arrastra o selecciona un archivo (opcional)', errFecha:!!s.form.errFecha, errValor:!!s.form.errValor,
+      setFecha:(e)=>this.setForm('fecha',e.target.value), setValor:(e)=>this.setForm('valor',e.target.value), setUnidad:(e)=>this.setForm('unidad',e.target.value),
+      setComentario:(e)=>this.setForm('comentario',e.target.value), setResultado:(e)=>this.setForm('resultado',e.target.value),
+      setEvidencia:(e)=>this.setForm('evidencia', (e.target.files&&e.target.files[0]&&e.target.files[0].name)||''), submit:()=>this.submitRegistro() } : { gesto:{} };
+
+    // ---- admin: ecogestos table ----
+    const aq=s.adminQ.trim().toLowerCase();
+    const adminFiltered = gestos.filter(g=>{ const e=this.effEstado(g); if(s.adminEstado && e!==s.adminEstado) return false; if(aq){ const tt=(g.nombre+' '+g.codigo).toLowerCase(); if(!tt.includes(aq)) return false; } return true; });
+    const confStyleMap = { alta:['#4F9447','#E7F0E5'], media:['#C9893F','#F6ECD9'], baja:['#A0617B','#F2E4EB'] };
+    const adminRows = adminFiltered.map(g=>{ const c=this.cat(g.categoriaId); const e=this.effEstado(g); const cs=confStyleMap[g.confianza]||confStyleMap.media;
+      return { codigo:g.codigo, nombre:g.nombre, catNombre:c.nombre, catColor:c.color, catTint:c.color+'1F', difLabel:this.cap(g.dificultad),
+        co2Cell: g.co2>0? g.co2+' kg' : (g.agua>0? Math.round(g.agua/1000)+' m³' : '—'), confianza:g.confianza,
+        confStyle:{ padding:'3px 9px',borderRadius:'999px',fontSize:'11px',fontWeight:700,background:cs[1],color:cs[0],textTransform:'capitalize' },
+        estado:e, estadoSelStyle:{ ...selStyle, width:'auto', minWidth:'150px', fontSize:'12px', padding:'6px 8px' },
+        checked: !!s.selectedRows[g.codigo], onCheck:()=>this.toggleRow(g.codigo), onEstado:(ev)=>this.setEditorial(g.codigo,ev.target.value), onOpen:()=>this.openFicha(g.codigo) };
+    });
+    const bulkCount = Object.keys(s.selectedRows).length;
+    const bulkActions = [ {label:'Publicar',icon:'public',onClick:()=>this.bulkSet('Publicado')}, {label:'A revisión',icon:'rate_review',onClick:()=>this.bulkSet('En revisión')}, {label:'Archivar',icon:'inventory_2',onClick:()=>this.bulkSet('Archivado')} ];
+
+    // ---- admin: KPIs ----
+    const pub=this.publicados();
+    const validados=gestos.filter(g=>g.validado).length;
+    const calidad= gestos.length? Math.round(validados/gestos.length*100):0;
+    const userReg = Object.values(s.progress).reduce((a,p)=> a + (p.registros||[]).filter(r=>r.resultado==='Completado').reduce((x,r)=>x+(r.co2Real||0),0), 0);
+    const insignias = Object.values(s.progress).filter(p=>p.estado==='completada').length;
+    const kpis = [
+      { label:'EcoGestos publicados', value:String(pub.length), sub:'activos y validados', icon:'inventory', color:'#4F9447' },
+      { label:'EcoGestos seleccionados', value:(1240+t.count).toLocaleString('es-ES'), sub:'añadidos a planes', icon:'add_task', color:'#537358' },
+      { label:'Planes creados', value:'318', sub:'personales y de entidad', icon:'description', color:'#5C7CA6' },
+      { label:'Kg CO₂ estimados', value:(84500+t.co2).toLocaleString('es-ES'), sub:'suma de planes', icon:'cloud', color:'#4F9447' },
+      { label:'Kg CO₂ registrados', value:(21300+userReg).toLocaleString('es-ES'), sub:'resultados reales', icon:'verified', color:'#3D8FA6' },
+      { label:'Finalización Moodle', value:'47%', sub:'completan microcurso', icon:'school', color:'#C9893F' },
+      { label:'Insignias emitidas', value:String(562+insignias), sub:'badges y diplomas', icon:'workspace_premium', color:'#A0617B' },
+      { label:'Top categoría', value: (this.CATS.map(c=>({c,n:gestos.filter(g=>g.categoriaId===c.id).length})).sort((a,b)=>b.n-a.n)[0]||{c:{nombre:'—'}}).c.nombre, sub:'mayor catálogo', icon:'category', color:'#8A6D3B' },
+      { label:'Calidad de datos', value:calidad+'%', sub:'con fuente validada', icon:'fact_check', color:'#537358' }
+    ];
+
+    const adminTab = s.adminTab;
+    const tabBtn=(id,label,icon)=>({ label, icon, onClick:()=>this.setAdminTab(id), style:{ display:'flex',alignItems:'center',gap:'7px',padding:'11px 16px',border:'none',background:'transparent',borderBottom:'2px solid '+(adminTab===id?'#4F9447':'transparent'),color:adminTab===id?'#4F9447':'#6b6f60',fontWeight:700,fontSize:'14px',cursor:'pointer',marginBottom:'-1px' } });
+    const adminTabs = [ tabBtn('dashboard','Dashboard','dashboard'), tabBtn('ecogestos','EcoGestos','table_rows'), tabBtn('recorridos','EcoRecorridos','route') ];
+
+    // ---- admin: ecorrecorridos ----
+    const recs = s.recorridos || [];
+    const recorridoList = recs.map(r=>({ codigo:r.codigo, nombre:r.nombre, perfil:r.perfil, estado:r.estado, count:r.items.length, estadoStyle:this.estadoStyle(r.estado), onSelect:()=>this.setRecorrido(r.codigo),
+      cardStyle:{ background: r.codigo===s.recorridoId?'#EAF1E6':'#fff', border:'1px solid '+(r.codigo===s.recorridoId?'#4F9447':'#E7DEC9'), borderRadius:'12px', padding:'14px', cursor:'pointer' } }));
+    const selR = this.selRecorrido();
+    let recorrido = { nombre:'—', items:[], descripcion:'', perfil:'—', estado:'', count:0, co2:0, estadoStyle:{} };
+    let addRecOptions = [];
+    if(selR){
+      const items = selR.items.map((it,idx)=>{ const g=gestos.find(x=>x.codigo===it.codigo); const c=g?this.cat(g.categoriaId):this.cat(''); const pre = it.prerequisito? ('Requiere: '+ (gestos.find(x=>x.codigo===it.prerequisito)||{nombre:it.prerequisito}).nombre) : (g?g.subcategoria:'');
+        return { codigo:it.codigo, nombre:g?g.nombre:it.codigo, icono:g?g.icono:'eco', catColor:c.color, catTint:c.color+'1F', orden:idx+1, prereqLabel:pre,
+          upStyle:{ display:'flex',padding:'1px',borderRadius:'5px',border:'1px solid #E1D7C0',background:idx===0?'#F4F1E9':'#fff',color:idx===0?'#c8c8bd':'#537358',cursor:idx===0?'default':'pointer' },
+          downStyle:{ display:'flex',padding:'1px',borderRadius:'5px',border:'1px solid #E1D7C0',background:idx===selR.items.length-1?'#F4F1E9':'#fff',color:idx===selR.items.length-1?'#c8c8bd':'#537358',cursor:idx===selR.items.length-1?'default':'pointer' },
+          obligLabel: it.obligatorio?'Obligatorio':'Opcional', obligStyle:{ padding:'5px 10px',borderRadius:'999px',border:'1px solid',fontWeight:700,fontSize:'11px',cursor:'pointer',whiteSpace:'nowrap', ...(it.obligatorio?{background:'#EAF1E6',color:'#4F9447',borderColor:'#BFD9BC'}:{background:'#fff',color:'#8a8d80',borderColor:'#E1D7C0'}) },
+          onUp:()=>this.moveRecItem(idx,-1), onDown:()=>this.moveRecItem(idx,1), onObligatorio:()=>this.toggleObligatorio(idx), onRemove:()=>this.removeRecItem(idx) };
+      });
+      const co2=selR.items.reduce((a,it)=>{ const g=gestos.find(x=>x.codigo===it.codigo); return a+((g&&g.co2)||0); },0);
+      recorrido = { nombre:selR.nombre, descripcion:selR.descripcion, perfil:selR.perfil, estado:selR.estado, estadoStyle:this.estadoStyle(selR.estado), count:selR.items.length, co2, items };
+      addRecOptions = gestos.filter(g=>!selR.items.some(i=>i.codigo===g.codigo)).map(g=>({ codigo:g.codigo, nombre:g.codigo+' · '+g.nombre }));
+    }
+
+    return {
+      isLanding: s.screen==='landing', isCatalogo: s.screen==='catalogo', isFicha: s.screen==='ficha' && !!ficha,
+      isPlan: s.screen==='plan', isResumen: s.screen==='resumen', isInforme: s.screen==='informe',
+      isProgreso: s.screen==='progreso', isRegistro: s.screen==='registro' && !!regG, isAdmin: s.screen==='admin',
+      isTabDashboard: adminTab==='dashboard', isTabGestos: adminTab==='ecogestos', isTabRecorridos: adminTab==='recorridos',
+      goLanding:()=>this.go('landing'), goCatalogo:()=>this.go('catalogo'), goPlan:()=>this.go('plan'), goResumen:()=>this.go('resumen'), goInforme:()=>this.go('informe'), goProgreso:()=>this.go('progreso'), goAdmin:()=>this.go('admin'),
+      printNow:()=>{ try{ window.print(); }catch(e){} },
+      navCatalogo: (s.screen==='catalogo'||s.screen==='ficha')?navActive:navBase,
+      navProgreso: (s.screen==='progreso'||s.screen==='registro')?navActive:navBase,
+      navAdmin: s.screen==='admin'?navActive:navBase,
+      planCount: t.count, totalGestos: gestos.length, totalCats: this.CATS.length, totalRecorridos: recs.length,
+      featured, catCards,
+      filterGroups, boolFilters, clearFilters:()=>this.clearFilters(),
+      q: s.q, onSearch:(e)=>this.setState({ q:e.target.value }, ()=>this.persist()),
+      catalogo, resultCount: catalogo.length, noResults: catalogo.length===0,
+      ficha,
+      planEmpty: planItems.length===0, planHas: planItems.length>0, planItems,
+      plazoOpts:this.PLAZOS, prioOpts:this.PRIOS, frecOpts:this.FRECS, selStyle, inputStyle,
+      tCo2: t.co2.toLocaleString('es-ES'), tAgua: t.agua.toLocaleString('es-ES'), tCoste: '~ '+t.costeEur+' €', tDif: t.difLabel,
+      tablaPlan, calendario, today: new Date().toLocaleDateString('es-ES',{ day:'2-digit', month:'long', year:'numeric' }),
+      chartBarras: this.chartBarras(), chartDonut: this.chartDonut(), chartArea: this.chartArea(), chartMatriz: this.chartMatriz(), chartRanking: this.chartRanking(),
+      // progreso
+      progPct, progPctW: progPct+'%', progPend, progCurso, progComp, progresoCols, nextSugerido: nextSug,
+      // registro
+      registro,
+      // admin
+      adminTabs, adminQ:s.adminQ, onAdminSearch:(e)=>this.setState({adminQ:e.target.value}), adminEstado:s.adminEstado, onAdminEstado:(e)=>this.setState({adminEstado:e.target.value}),
+      estadosList:this.ESTADOS, adminRows, adminCount: adminFiltered.length,
+      bulkActive: bulkCount>0, bulkCount, bulkActions, clearBulk:()=>this.clearBulk(),
+      kpis, dashBarras:this.dashBarras(), dashDonut:this.dashDonut(), dashArea:this.dashArea(), dashMatriz:this.dashMatriz(), dashRanking:this.dashRanking(),
+      recorridoList, recorrido, addRecOptions, addRecValue:s.addRecValue, onAddRecorrido:(e)=>{ this.addRecorrido(e.target.value); }
+    };
+  }
+}
+</script>
+</body>
+</html>

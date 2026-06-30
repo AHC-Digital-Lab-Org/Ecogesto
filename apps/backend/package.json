@@ -1,0 +1,43 @@
+{
+  "name": "@ecogestos/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "prisma generate",
+    "predev": "npm run build --workspace @ecogestos/shared",
+    "dev": "tsx watch src/index.ts",
+    "prebuild": "npm run build --workspace @ecogestos/shared",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "pretypecheck": "npm run build --workspace @ecogestos/shared",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pretest": "npm run build --workspace @ecogestos/shared",
+    "test": "vitest run",
+    "db:generate": "prisma generate",
+    "db:push": "sqlite3 prisma/dev.db < prisma/migrations/20260618170000_initial/migration.sql",
+    "db:seed": "tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "@ecogestos/shared": "*",
+    "@hono/node-server": "^1.14.4",
+    "@prisma/client": "^6.10.1",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.6.1",
+    "hono": "^4.8.3",
+    "nanoid": "^5.1.5",
+    "otplib": "^12.0.1",
+    "pino": "^9.7.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "prisma": "^6.10.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "prisma": {
+    "seed": "tsx scripts/seed.ts"
+  }
+}

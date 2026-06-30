@@ -1,19 +1,27 @@
 {
-  "name": "asociacion-node-template",
-  "version": "1.0.0",
-  "type": "module",
+  "name": "ecogestos-ahc",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Web App EcoGestos para la Asociación Huella de Carbono",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext .js,.jsx --fix",
-    "test": "vitest run --passWithNoTests"
+    "dev": "npm run build --workspace @ecogestos/shared && npm run dev --workspace @ecogestos/backend & npm run dev --workspace @ecogestos/frontend",
+    "dev:backend": "npm run dev --workspace @ecogestos/backend",
+    "dev:frontend": "npm run dev --workspace @ecogestos/frontend",
+    "build": "npm run build --workspace @ecogestos/shared && npm run build --workspace @ecogestos/frontend && npm run postbuild:web",
+    "postbuild:web": "rm -rf dist && cp -R apps/frontend/dist dist",
+    "build:all": "npm run build --workspace @ecogestos/shared && npm run build --workspace @ecogestos/backend && npm run build --workspace @ecogestos/frontend",
+    "build:backend": "npm run build --workspace @ecogestos/shared && npm run build --workspace @ecogestos/backend",
+    "test": "npm run test --workspace @ecogestos/backend",
+    "lint": "npm run typecheck --workspace @ecogestos/shared && npm run typecheck --workspace @ecogestos/backend && npm run typecheck --workspace @ecogestos/frontend",
+    "db:generate": "npm run db:generate --workspace @ecogestos/backend",
+    "db:push": "npm run db:push --workspace @ecogestos/backend",
+    "db:seed": "npm run db:seed --workspace @ecogestos/backend"
   },
-  "devDependencies": {
-    "eslint": "^8.57.1",
-    "eslint-plugin-react": "^7.37.5",
-    "vite": "^8.0.10",
-    "vitest": "^4.1.5"
+  "engines": {
+    "node": ">=22"
   }
 }
-

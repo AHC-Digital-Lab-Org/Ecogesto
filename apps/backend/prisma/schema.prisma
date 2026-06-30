@@ -1,0 +1,333 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  alias           String    @unique
+  email           String?
+  nombre          String?
+  tipoUsuario     String    @default("usuario_registrado") @map("tipo_usuario")
+  ciudad          String?
+  pais            String    @default("España")
+  fechaAlta       DateTime  @default(now()) @map("fecha_alta")
+  consentimientos Json
+  estado          String    @default("activo")
+  totpSecret      String?   @map("totp_secret")
+  twoFactorOn     Boolean   @default(false) @map("two_factor_on")
+  profiles        Profile[]
+  plans           Plan[]
+  results         Result[]
+  badgeAwards     BadgeAward[]
+  redemptions     RewardRedemption[]
+
+  @@map("users")
+}
+
+model Profile {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  hogar           Json?
+  movilidad       Json?
+  dieta           Json?
+  vivienda        Json?
+  presupuesto     String?
+  motivaciones    Json?
+  barreras        Json?
+  nivelCompromiso String?  @map("nivel_compromiso")
+  cohortId        String?  @map("cohort_id")
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  parentId    String?      @map("parent_id")
+  nombre      String
+  descripcion String?
+  icono       String       @default("eco")
+  color       String       @default("#4F9447")
+  orden       Int          @default(0)
+  activa      Boolean      @default(true)
+  parent      Category?    @relation("CategoryTree", fields: [parentId], references: [id])
+  children    Category[]   @relation("CategoryTree")
+  ecogestures Ecogesture[]
+
+  @@map("categories")
+}
+
+model Ecogesture {
+  id             String            @id @default(cuid())
+  codigo         String            @unique
+  nombre         String
+  resumen        String
+  descripcion    String?
+  categoriaId    String            @map("categoria_id")
+  dificultad     String
+  coste          String
+  impacto        Float             @default(0)
+  unidad         String            @default("kg CO2e")
+  periodo        String            @default("anual")
+  estado         String            @default("Borrador")
+  version        Int               @default(1)
+  fechaAlta      DateTime          @default(now()) @map("fecha_alta")
+  fechaRevision  DateTime?         @map("fecha_revision")
+  slug           String            @unique
+  aliasCorto     String?           @map("alias_corto")
+  idioma         String            @default("es")
+  licencia       String            @default("CC BY-NC-SA 4.0")
+  autor          String            @default("AHC")
+  validador      String?
+  subcategoria   String?
+  perfiles       Json
+  icono          String            @default("eco")
+  fuente         String            @default("pendiente")
+  confianza      String            @default("pendiente")
+  impactoNivel   String            @default("pendiente") @map("impacto_nivel")
+  ambito         String            @default("hogar")
+  category       Category          @relation(fields: [categoriaId], references: [id])
+  steps          EcogestureStep[]
+  impactFactors  ImpactFactor[]
+  mediaAssets    MediaAsset[]
+  planItems      PlanItem[]
+  results        Result[]
+  ecorouteItems  EcorouteItem[]     @relation("RouteGesture")
+  prerequisiteOf EcorouteItem[]     @relation("RoutePrerequisite")
+  moodleLink     MoodleLink?
+
+  @@map("ecogestures")
+}
+
+model EcogestureStep {
+  id                  String      @id @default(cuid())
+  ecogestureId         String      @map("ecogesture_id")
+  orden               Int
+  titulo              String
+  descripcion         String
+  evidenciaRequerida  String?     @map("evidencia_requerida")
+  tiempoEstimado      String?     @map("tiempo_estimado")
+  ecogesture          Ecogesture  @relation(fields: [ecogestureId], references: [id], onDelete: Cascade)
+
+  @@map("ecogesture_steps")
+}
+
+model ImpactFactor {
+  id              String     @id @default(cuid())
+  ecogestureId     String     @map("ecogesture_id")
+  variable        String
+  formula         String
+  factor          Float
+  unidad          String
+  fuente          String
+  confianza       String
+  fechaRevision   DateTime?  @map("fecha_revision")
+  ecogesture      Ecogesture @relation(fields: [ecogestureId], references: [id], onDelete: Cascade)
+
+  @@map("impact_factors")
+}
+
+model MediaAsset {
+  id          String     @id @default(cuid())
+  ecogestureId String?    @map("ecogesture_id")
+  tipo        String
+  url         String
+  altText     String     @map("alt_text")
+  licencia    String
+  autor       String
+  estado      String     @default("activo")
+  ecogesture  Ecogesture? @relation(fields: [ecogestureId], references: [id], onDelete: SetNull)
+
+  @@map("media_assets")
+}
+
+model Plan {
+  id           String     @id @default(cuid())
+  userId       String     @map("user_id")
+  nombre       String
+  objetivo     String?
+  fechaCreacion DateTime  @default(now()) @map("fecha_creacion")
+  estado       String     @default("activo")
+  totalCo2     Float      @default(0) @map("total_co2")
+  totalCoste   Float      @default(0) @map("total_coste")
+  totalAgua    Float      @default(0) @map("total_agua")
+  totalPlastico Float     @default(0) @map("total_plastico")
+  snapshot     Json?
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items        PlanItem[]
+  results      Result[]
+
+  @@map("plans")
+}
+
+model PlanItem {
+  id                   String     @id @default(cuid())
+  planId               String     @map("plan_id")
+  ecogestureId          String     @map("ecogesture_id")
+  prioridad            String
+  porcentajeAplicacion Float      @default(100) @map("porcentaje_aplicacion")
+  plazo                String
+  frecuencia           String
+  impactoEstimado      Float      @default(0) @map("impacto_estimado")
+  costeEstimado        Float      @default(0) @map("coste_estimado")
+  estado               String     @default("pendiente")
+  factorSnapshot       Json?      @map("factor_snapshot")
+  plan                 Plan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+  ecogesture           Ecogesture @relation(fields: [ecogestureId], references: [id])
+  results              Result[]
+
+  @@unique([planId, ecogestureId])
+  @@map("plan_items")
+}
+
+model Result {
+  id               String      @id @default(cuid())
+  userId           String      @map("user_id")
+  ecogestureId      String      @map("ecogesture_id")
+  planItemId        String?     @map("plan_item_id")
+  planId            String?     @map("plan_id")
+  fechaInicio       DateTime?   @map("fecha_inicio")
+  fechaFin          DateTime?   @map("fecha_fin")
+  valor             Float
+  unidad            String
+  co2Real           Float       @default(0) @map("co2_real")
+  evidenciaUrl      String?     @map("evidencia_url")
+  comentario        String?
+  validacionEstado  String      @default("declarado") @map("validacion_estado")
+  factorSnapshot    Json?       @map("factor_snapshot")
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ecogesture        Ecogesture  @relation(fields: [ecogestureId], references: [id])
+  planItem          PlanItem?   @relation(fields: [planItemId], references: [id])
+  plan              Plan?       @relation(fields: [planId], references: [id])
+
+  @@map("results")
+}
+
+model Ecoroute {
+  id              String         @id @default(cuid())
+  codigo          String         @unique
+  nombre          String
+  descripcion     String
+  perfilObjetivo  String         @map("perfil_objetivo")
+  dificultadTotal String         @map("dificultad_total")
+  impactoEstimado Float          @default(0) @map("impacto_estimado")
+  estado          String         @default("Borrador")
+  items           EcorouteItem[]
+
+  @@map("ecoroutes")
+}
+
+model EcorouteItem {
+  id              String      @id @default(cuid())
+  ecorouteId       String      @map("ecoroute_id")
+  ecogestureId     String      @map("ecogesture_id")
+  orden           Int
+  obligatorio     Boolean     @default(false)
+  prerequisitoId  String?     @map("prerequisito_id")
+  ecoroute        Ecoroute    @relation(fields: [ecorouteId], references: [id], onDelete: Cascade)
+  ecogesture      Ecogesture  @relation("RouteGesture", fields: [ecogestureId], references: [id])
+  prerequisite    Ecogesture? @relation("RoutePrerequisite", fields: [prerequisitoId], references: [id])
+
+  @@unique([ecorouteId, ecogestureId])
+  @@map("ecoroute_items")
+}
+
+model MoodleLink {
+  id                    String     @id @default(cuid())
+  ecogestureId           String     @unique @map("ecogesture_id")
+  courseId              String?    @map("course_id")
+  activityId            String?    @map("activity_id")
+  enrolUrl              String?    @map("enrol_url")
+  badgeId               String?    @map("badge_id")
+  certificateTemplateId String?    @map("certificate_template_id")
+  syncStatus            String     @default("pendiente") @map("sync_status")
+  ecogesture            Ecogesture @relation(fields: [ecogestureId], references: [id], onDelete: Cascade)
+
+  @@map("moodle_links")
+}
+
+model Badge {
+  id            String       @id @default(cuid())
+  code          String       @unique
+  name          String
+  description   String
+  criteria      String
+  imageUrl      String?      @map("image_url")
+  issuerName    String       @default("EcoGestos AHC") @map("issuer_name")
+  issuerUrl     String       @default("https://ecogestos.local") @map("issuer_url")
+  badgeType     String       @default("open_badge_2") @map("badge_type")
+  pointsAwarded Int          @default(0) @map("points_awarded")
+  rule          Json?
+  active        Boolean      @default(true)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  awards        BadgeAward[]
+
+  @@map("badges")
+}
+
+model BadgeAward {
+  id          String    @id @default(cuid())
+  badgeId     String    @map("badge_id")
+  userId      String    @map("user_id")
+  issuedOn    DateTime  @default(now()) @map("issued_on")
+  evidenceUrl String?   @map("evidence_url")
+  status      String    @default("issued")
+  snapshot    Json?
+  badge       Badge     @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([badgeId, userId])
+  @@map("badge_awards")
+}
+
+model Reward {
+  id             String             @id @default(cuid())
+  code           String             @unique
+  name           String
+  description    String
+  provider       String
+  rewardType     String             @default("digital") @map("reward_type")
+  pointsRequired Int                @map("points_required")
+  stock          Int?
+  active         Boolean            @default(true)
+  terms          String?
+  createdAt      DateTime           @default(now()) @map("created_at")
+  redemptions    RewardRedemption[]
+
+  @@map("rewards")
+}
+
+model RewardRedemption {
+  id          String   @id @default(cuid())
+  rewardId    String   @map("reward_id")
+  userId      String   @map("user_id")
+  pointsSpent Int      @map("points_spent")
+  status      String   @default("solicitado")
+  requestedAt DateTime @default(now()) @map("requested_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  notes       String?
+  snapshot    Json?
+  reward      Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("reward_redemptions")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  usuario   String
+  entidad   String
+  entidadId String   @map("entidad_id")
+  accion    String
+  antes     Json?
+  despues   Json?
+  fecha     DateTime @default(now())
+  ip        String?
+
+  @@map("audit_log")
+}

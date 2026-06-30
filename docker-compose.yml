@@ -1,0 +1,37 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: file:./dev.db
+      API_PORT: 3000
+    volumes:
+      - backend-data:/app/apps/backend/prisma
+      - uploads:/app/apps/backend/uploads
+    ports:
+      - "3000:3000"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    environment:
+      VITE_API_URL: /api
+    depends_on:
+      - api
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - api
+      - web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+volumes:
+  backend-data:
+  uploads:
