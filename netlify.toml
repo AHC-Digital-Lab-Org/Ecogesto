@@ -1,18 +1,28 @@
-# Configuración de despliegue del FRONTEND estático en Netlify.
-# El pipeline central (asociacion-ops/netlify-reusable.yml) ejecuta `npm run build`
-# y despliega la carpeta `dist/` con `netlify deploy --dir=dist`.
-# Este archivo permite además desplegar desde la UI de Netlify o con `netlify dev`
-# de forma equivalente.
+# Configuración de despliegue en Netlify.
+#
+# Este repo es un MONOREPO (npm workspaces: apps/frontend, apps/backend,
+# packages/shared). El sitio de Netlify es SOLO el frontend estático; el backend
+# (API Hono) se despliega aparte (Docker). Por eso fijamos `base = "apps/frontend"`:
+# así netlify-cli sabe qué paquete del monorepo es el sitio y deja de fallar con
+# "We've detected multiple projects inside your repository".
+#
+# El CI central (asociacion-ops/netlify-reusable.yml) hace `npm run build` en la
+# raíz (compila shared + frontend -> apps/frontend/dist y copia a ./dist) y luego
+# `netlify deploy --dir=dist`. Con base=apps/frontend, `dist` se resuelve a
+# apps/frontend/dist, que el build de la raíz ya genera.
 
 [build]
-  command = "npm run build"
+  base = "apps/frontend"
+  # Fallback para builds lanzados desde la UI de Netlify: ejecuta el build de la
+  # raíz del monorepo (compila shared + frontend).
+  command = "npm --prefix ../.. run build"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "24"
-  # URL pública del backend (API Hono). Debe apuntar al servicio donde se hospede
-  # el backend (Docker en Render/Railway/Fly/VPS). Si se deja vacío, el frontend
-  # usa "/api" como ruta relativa (válido solo si hay un proxy delante).
+  # URL pública del backend (API Hono). Apunta al servicio donde se hospede el
+  # backend (Docker en Render/Railway/Fly/VPS). Vacío => el frontend usa "/api"
+  # como ruta relativa (válido solo si hay un proxy delante).
   # Configúralo también en Site settings -> Environment variables de Netlify.
   VITE_API_URL = "/api"
 
