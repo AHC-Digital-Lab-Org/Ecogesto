@@ -8,4 +8,3 @@ apps/backend/prisma/dev.db-journal
 apps/backend/uploads/
 coverage/
 .DS_Store
-.vercel
