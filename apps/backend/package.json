@@ -11,7 +11,7 @@
     "start": "node dist/src/index.js",
     "pretypecheck": "npm run build --workspace @ecogestos/shared",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "pretest": "npm run build --workspace @ecogestos/shared",
+    "pretest": "npm run build --workspace @ecogestos/shared && npm run db:generate",
     "test": "vitest run",
     "db:generate": "prisma generate",
     "db:push": "tsx scripts/db-push.ts",
