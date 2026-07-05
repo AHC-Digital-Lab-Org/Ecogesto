@@ -23,8 +23,12 @@ diseño/      Prototipo visual original
 
 ## Comandos
 
+Requisitos: Node.js 22 y npm 10 o posteriores. Los mismos comandos se usan en
+macOS y Linux desde la raíz del repositorio.
+
 ```bash
 npm install
+cp .env.example .env
 npm run db:generate
 npm run db:push
 npm run db:seed
@@ -36,12 +40,18 @@ Backend local: http://localhost:3000/api/health
 
 ## Docker
 
+Requisitos: Docker Engine o Docker Desktop/OrbStack con Docker Compose. No es
+necesario instalar Node.js ni SQLite en el sistema anfitrión.
+
 ```bash
 cp .env.example .env
 docker compose up --build
 ```
 
 Entrada nginx: http://localhost:8080
+
+Si el puerto 8080 ya está ocupado, detén el servicio que lo utiliza o cambia el
+puerto publicado por nginx en `docker-compose.yml` (por ejemplo, `18080:80`).
 
 ## Despliegue en la organización (Netlify + asociacion-ops)
 
