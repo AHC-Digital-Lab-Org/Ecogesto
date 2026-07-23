@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { serveStatic } from "@hono/node-server/serve-static";
 import { deleteCookie } from "hono/cookie";
 import { z } from "zod";
 import {
@@ -1069,3 +1070,7 @@ app.get("/api/admin/audit", async (c) => {
   const logs = await prisma.auditLog.findMany({ orderBy: { fecha: "desc" }, take: 100 });
   return c.json({ data: logs });
 });
+
+const frontendDist = process.env.FRONTEND_DIST_DIR ?? "../frontend/dist";
+app.use("/*", serveStatic({ root: frontendDist }));
+app.get("*", serveStatic({ path: `${frontendDist}/index.html` }));
